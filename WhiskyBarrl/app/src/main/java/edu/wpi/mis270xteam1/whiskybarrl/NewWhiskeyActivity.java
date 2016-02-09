@@ -1,37 +1,22 @@
 package edu.wpi.mis270xteam1.whiskybarrl;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
-
-    Button newWhiskeyButton;
+public class NewWhiskeyActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        newWhiskeyButton = (Button) findViewById(R.id.new_whiskey);
-
-        newWhiskeyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, NewWhiskeyActivity.class);
-                startActivity(i);
-            }
-        });
+        setContentView(R.layout.activity_new_whiskey);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_new_whiskey, menu);
         return true;
     }
 
