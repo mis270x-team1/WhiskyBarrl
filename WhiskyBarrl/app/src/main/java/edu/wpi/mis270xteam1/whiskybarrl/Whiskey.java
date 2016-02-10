@@ -13,7 +13,6 @@ public class Whiskey {
     private int age;
     private String location;
 
-
     public Whiskey() {}
 
     public String getName() {
