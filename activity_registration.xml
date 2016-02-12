@@ -46,7 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editTextUsername"
-            android:text="Enter Username" />
+            android:hint="Enter Username" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -58,7 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:text="Enter First Name"
+            android:hint="Enter First Name"
             android:ems="10"
             android:id="@+id/editTextFN" />
 
@@ -72,7 +72,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:text="Enter Last Name"
+            android:hint="Enter Last Name"
             android:ems="10"
             android:id="@+id/editTextLN" />
 
@@ -88,7 +88,7 @@
             android:inputType="textEmailAddress"
             android:ems="10"
             android:id="@+id/editTextEmail"
-            android:text="Enter Email" />
+            android:hint="Enter Email" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -102,7 +102,7 @@
             android:inputType="phone"
             android:ems="10"
             android:id="@+id/editTextPN"
-            android:text="Enter Phone Number" />
+            android:hint="Enter Phone Number" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -116,7 +116,7 @@
             android:inputType="textPassword"
             android:ems="10"
             android:id="@+id/editTextPasswrod"
-            android:text="Enter Password" />
+            android:hint="Enter Password" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -130,7 +130,7 @@
             android:inputType="textPassword"
             android:ems="10"
             android:id="@+id/editTextCpass"
-            android:text="Re-Enter Password" />
+            android:hint="Re-Enter Password" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -142,7 +142,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editTextGender"
-            android:text="Enter Gender" />
+            android:hint="Enter Gender" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -154,21 +154,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editTextCountry"
-            android:text="Enter Country" />
+            android:hint="Enter Country" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Register"
+            android:id="@+id/buttonRegister"
+            android:layout_gravity="center_horizontal" />
 
 
 
     </LinearLayout>
 </ScrollView>
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/editText"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="238dp"
-        android:layout_marginEnd="238dp" />
 </RelativeLayout>
 
 
