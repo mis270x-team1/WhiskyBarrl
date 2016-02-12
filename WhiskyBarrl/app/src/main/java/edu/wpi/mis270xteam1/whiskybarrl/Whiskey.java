@@ -6,6 +6,7 @@ import java.lang.ref.SoftReference;
  * Created by Anthony J. Ruffa on 2/5/2016.
  */
 public class Whiskey {
+    private int id;
     private String name;
     private String description;
     private int rating;
@@ -14,6 +15,19 @@ public class Whiskey {
     private String location;
 
     public Whiskey() {}
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
