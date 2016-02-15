@@ -41,7 +41,7 @@ public class NewWhiskeyActivity extends AppCompatActivity {
                 String location = editTextLocation.getText().toString();
                 int alcoholContent = Integer.parseInt(editTextAlcCont.getText().toString());
                 String description = editTextDesc.getText().toString();
-                int rating = ratingBar.getNumStars();
+                String rating = Float.toString(ratingBar.getRating());
 
                 Whiskey whiskey = new Whiskey();
                 whiskey.setName(name);

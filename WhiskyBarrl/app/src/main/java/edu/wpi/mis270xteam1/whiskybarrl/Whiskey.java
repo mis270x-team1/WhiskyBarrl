@@ -1,7 +1,5 @@
 package edu.wpi.mis270xteam1.whiskybarrl;
 
-import java.lang.ref.SoftReference;
-
 /**
  * Created by Anthony J. Ruffa on 2/5/2016.
  */
@@ -9,7 +7,7 @@ public class Whiskey {
     private int id;
     private String name;
     private String description;
-    private int rating;
+    private String rating;
     private int proofLevel;
     private int age;
     private String location;
@@ -45,11 +43,11 @@ public class Whiskey {
         this.description = description;
     }
 
-    public int getRating() {
+    public String getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(String rating) {
         this.rating = rating;
     }
 
