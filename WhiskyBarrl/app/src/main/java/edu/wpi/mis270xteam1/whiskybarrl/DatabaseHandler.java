@@ -2,8 +2,13 @@ package edu.wpi.mis270xteam1.whiskybarrl;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.ArrayAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Anthony J. Ruffa on 2/5/2016.
@@ -14,28 +19,30 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     private static final String USER_TABLE_NAME = "Users";
     private static final String USER_COLUMN_ID = "_id";
-    private static final String USER_COLUMN_USERNAME = "username";
-    private static final String USER_COLUMN_PASSWORD = "password";
-    private static final String USER_COLUMN_FIRST_NAME = "firstname";
-    private static final String USER_COLUMN_LAST_NAME = "lastname";
-    private static final String USER_COLUMN_EMAIL = "email";
-    private static final String USER_COLUMN_PHONE = "phone";
-    private static final String USER_COLUMN_AGE = "age";
-    private static final String USER_COLUMN_GENDER = "gender";
-    private static final String USER_COLUMN_COUNTRY = "country";
+    private static final String USER_COLUMN_USERNAME = "Username";
+    private static final String USER_COLUMN_PASSWORD = "Password";
+    private static final String USER_COLUMN_FIRST_NAME = "Firstname";
+    private static final String USER_COLUMN_LAST_NAME = "Lastname";
+    private static final String USER_COLUMN_EMAIL = "Email";
+    private static final String USER_COLUMN_PHONE = "Phone";
+    private static final String USER_COLUMN_AGE = "Age";
+    private static final String USER_COLUMN_GENDER = "Gender";
+    private static final String USER_COLUMN_COUNTRY = "Country";
 
     private static final String WHISKEY_TABLE_NAME = "Whiskeys";
     private static final String WHISKEY_COLUMN_ID = "_id";
-    private static final String WHISKEY_COLUMN_NAME = "whiskey";
-    private static final String WHISKEY_COLUMN_DESCRIPTION = "description";
-    private static final String WHISKEY_COLUMN_RATING = "rating";
-    private static final String WHISKEY_COLUMN_PROOF = "proof";
-    private static final String WHISKEY_COLUMN_AGE = "age";
-    private static final String WHISKEY_COLUMN_LOCATION = "location";
+    private static final String WHISKEY_COLUMN_NAME = "Name";
+    private static final String WHISKEY_COLUMN_DESCRIPTION = "Description";
+    private static final String WHISKEY_COLUMN_RATING = "Rating";
+    private static final String WHISKEY_COLUMN_PROOF = "Proof";
+    private static final String WHISKEY_COLUMN_AGE = "Age";
+    private static final String WHISKEY_COLUMN_LOCATION = "Location";
 
+    private Context context;
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
     }
 
 
@@ -126,6 +133,66 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.insert(WHISKEY_TABLE_NAME, null, values);
         db.close();
         return true;
+    }
+
+    /**
+     * Retrieve a whiskey from the database using its ID.
+     *
+     * @param id the ID of the whiskey to retrieve
+     * @return the whiskey
+     */
+    public Whiskey getWhiskey(int id) {
+        SQLiteDatabase db = getReadableDatabase();
+
+
+        Cursor c = db.rawQuery("SELECT * FROM " + WHISKEY_TABLE_NAME
+                + " WHERE " + WHISKEY_COLUMN_ID + " = \"" + id + "\"", null);
+
+        if (c != null) {
+            c.moveToFirst();
+        }
+
+        Whiskey whiskey = new Whiskey();
+        whiskey.setId(id);
+        whiskey.setName(c.getString(c.getColumnIndex(WHISKEY_COLUMN_NAME)));
+        whiskey.setDescription(c.getString(c.getColumnIndex(WHISKEY_COLUMN_DESCRIPTION)));
+        whiskey.setRating(c.getString(c.getColumnIndex(WHISKEY_COLUMN_RATING)));
+        whiskey.setProofLevel(c.getInt(c.getColumnIndex(WHISKEY_COLUMN_PROOF)));
+        whiskey.setLocation(c.getString(c.getColumnIndex(WHISKEY_COLUMN_LOCATION)));
+        whiskey.setAge(c.getInt(c.getColumnIndex(WHISKEY_COLUMN_AGE)));
+
+        c.close();
+
+        return whiskey;
+    }
+
+    /**
+     * Get all the whiskeys from the database.
+     *
+     * @return an array adapter with the whiskeys retrieved
+     */
+    public List<Whiskey> getAllWhiskeys() {
+        SQLiteDatabase db = getWritableDatabase();
+        List<Whiskey> results = new ArrayList<>();
+
+        Cursor c = db.rawQuery("SELECT * FROM " + WHISKEY_TABLE_NAME + ";", null);
+
+        if (c.moveToFirst()) {
+            do {
+                Whiskey whiskey = new Whiskey();
+                whiskey.setId(c.getInt(c.getColumnIndex(WHISKEY_COLUMN_ID)));
+                whiskey.setName(c.getString(c.getColumnIndex(WHISKEY_COLUMN_NAME)));
+                whiskey.setDescription(c.getString(c.getColumnIndex(WHISKEY_COLUMN_DESCRIPTION)));
+                whiskey.setRating(c.getString(c.getColumnIndex(WHISKEY_COLUMN_RATING)));
+                whiskey.setProofLevel(c.getInt(c.getColumnIndex(WHISKEY_COLUMN_PROOF)));
+                whiskey.setLocation(c.getString(c.getColumnIndex(WHISKEY_COLUMN_LOCATION)));
+                whiskey.setAge(c.getInt(c.getColumnIndex(WHISKEY_COLUMN_AGE)));
+                results.add(whiskey);
+            } while (c.moveToNext());
+        }
+        c.close();
+
+        return results;
     }
 
     /**

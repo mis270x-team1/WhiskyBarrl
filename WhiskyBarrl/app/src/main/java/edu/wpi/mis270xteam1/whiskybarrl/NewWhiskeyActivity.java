@@ -4,13 +4,60 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.RatingBar;
 
 public class NewWhiskeyActivity extends AppCompatActivity {
+    EditText editTextName;
+    EditText editTextLocation;
+    EditText editTextAlcCont;
+    EditText editTextDesc;
+
+    ImageButton imageButton;
+    RatingBar ratingBar;
+    Button buttonSub;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_whiskey);
+
+        editTextName = (EditText) findViewById(R.id.editTextName);
+        editTextLocation = (EditText) findViewById(R.id.editTextLocation);
+        editTextAlcCont = (EditText) findViewById(R.id.editTextAlcCont);
+        editTextDesc = (EditText) findViewById(R.id.editTextDesc);
+        imageButton = (ImageButton) findViewById(R.id.imageButton);
+        ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+        buttonSub = (Button) findViewById(R.id.buttonSub);
+
+        buttonSub.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = editTextName.getText().toString();
+                String location = editTextLocation.getText().toString();
+                int alcoholContent = Integer.parseInt(editTextAlcCont.getText().toString());
+                String description = editTextDesc.getText().toString();
+                String rating = Float.toString(ratingBar.getRating());
+
+                Whiskey whiskey = new Whiskey();
+                whiskey.setName(name);
+                whiskey.setLocation(location);
+                whiskey.setProofLevel(alcoholContent);
+                whiskey.setDescription(description);
+                whiskey.setRating(rating);
+
+                DatabaseHandler dbHandler = new DatabaseHandler(NewWhiskeyActivity.this);
+                boolean whiskeyAdded = dbHandler.addWhiskey(whiskey);
+
+                if (whiskeyAdded) {
+                    finish();
+                }
+            }
+        });
     }
 
     @Override
