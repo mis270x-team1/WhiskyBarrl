@@ -47,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/editTextName"
-                android:text="Enter Name" />
+                android:hint="Enter Name" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -70,7 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/editTextLocation"
-                android:text="Enter Location" />
+                android:hint="Enter Location" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -82,7 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/editTextAlcCont"
-                android:text="Enter Alcohol Content" />
+                android:hint="Enter Alcohol Content" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -106,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/editTextDesc"
                 android:layout_weight="0.63"
-                android:text="Enter Description" />
+                android:hint="Enter Description" />
 
             <Button
                 android:layout_width="wrap_content"
