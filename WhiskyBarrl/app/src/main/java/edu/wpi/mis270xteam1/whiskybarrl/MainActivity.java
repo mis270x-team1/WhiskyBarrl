@@ -10,22 +10,10 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button newWhiskeyButton;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        newWhiskeyButton = (Button) findViewById(R.id.new_whiskey);
-
-        newWhiskeyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, NewWhiskeyActivity.class);
-                startActivity(i);
-            }
-        });
     }
 
     @Override
