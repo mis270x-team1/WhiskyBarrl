@@ -94,18 +94,24 @@ public class RegistrationActivity extends Activity {
     }
 
     private boolean isRegistrationInfoValid() {
-        String usernameEntry = editTextUsername.getText().toString();
         String firstNameEntry = editTextFirstName.getText().toString();
         String lastNameEntry = editTextLastName.getText().toString();
         String genderEntry = editTextGender.getText().toString();
         String countryEntry = editTextCountry.getText().toString();
 
-        return isPasswordValid() && isAgeValid() && isEmailValid()
-                && isPhoneNumberValid() && !TextUtils.isEmpty(usernameEntry)
+        return isUserNameValid() && isPasswordValid() && isAgeValid()
+                && isEmailValid() && isPhoneNumberValid()
                 && !TextUtils.isEmpty(firstNameEntry)
                 && !TextUtils.isEmpty(lastNameEntry)
                 && !TextUtils.isEmpty(genderEntry)
                 && !TextUtils.isEmpty(countryEntry);
+    }
+
+    private boolean isUserNameValid() {
+        String usernameEntry = editTextUsername.getText().toString();
+        User userWithUsername = dbHandler.getUser(usernameEntry);
+
+        return userWithUsername == null && !TextUtils.isEmpty(usernameEntry);
     }
 
     private boolean isAgeValid() {

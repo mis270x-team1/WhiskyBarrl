@@ -6,18 +6,40 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
-
-import java.util.List;
+import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
+    EditText editTextUsername;
+    EditText editTextPassword;
+
+    Button loginButton;
+    Button registerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        editTextUsername = (EditText) findViewById(R.id.editTextUserName);
+        editTextPassword = (EditText) findViewById(R.id.editTextPassword);
+        loginButton = (Button) findViewById(R.id.buttonLogIn);
+        registerButton = (Button) findViewById(R.id.buttonRegister);
+
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent registerIntent = new Intent(MainActivity.this, RegistrationActivity.class);
+                startActivity(registerIntent);
+            }
+        });
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: Implement user login
+            }
+        });
     }
 
     @Override
