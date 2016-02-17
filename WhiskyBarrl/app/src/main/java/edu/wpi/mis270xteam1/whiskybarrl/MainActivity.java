@@ -10,11 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
-    EditText editTextUsername;
-    EditText editTextPassword;
+    private EditText editTextUsername;
+    private EditText editTextPassword;
 
-    Button loginButton;
-    Button registerButton;
+    private Button loginButton;
+    private Button registerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

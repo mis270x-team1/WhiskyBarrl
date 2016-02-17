@@ -11,20 +11,20 @@ import android.widget.Toast;
 
 public class RegistrationActivity extends Activity {
 
-    EditText editTextUsername;
-    EditText editTextFirstName;
-    EditText editTextLastName;
-    EditText editTextAge;
-    EditText editTextEmail;
-    EditText editTextPhoneNumber;
-    EditText editTextPassword;
-    EditText editTextReEnterPassword;
-    EditText editTextGender;
-    EditText editTextCountry;
+    private EditText editTextUsername;
+    private EditText editTextFirstName;
+    private EditText editTextLastName;
+    private EditText editTextAge;
+    private EditText editTextEmail;
+    private EditText editTextPhoneNumber;
+    private EditText editTextPassword;
+    private EditText editTextReEnterPassword;
+    private EditText editTextGender;
+    private EditText editTextCountry;
 
-    Button registerButton;
+    private Button registerButton;
 
-    DatabaseHandler dbHandler;
+    private DatabaseHandler dbHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
