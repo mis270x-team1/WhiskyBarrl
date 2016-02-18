@@ -11,14 +11,14 @@ import android.widget.ImageButton;
 import android.widget.RatingBar;
 
 public class NewWhiskeyActivity extends AppCompatActivity {
-    EditText editTextName;
-    EditText editTextLocation;
-    EditText editTextAlcCont;
-    EditText editTextDesc;
+    private EditText editTextName;
+    private EditText editTextLocation;
+    private EditText editTextAlcCont;
+    private EditText editTextDesc;
 
-    ImageButton imageButton;
-    RatingBar ratingBar;
-    Button buttonSub;
+    private ImageButton imageButton;
+    private RatingBar ratingBar;
+    private Button buttonSub;
 
 
     @Override

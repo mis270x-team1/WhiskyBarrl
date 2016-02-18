@@ -79,6 +79,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Age (must be at least 21)"
+            android:id="@+id/textViewAge" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:id="@+id/editTextAge"
+            android:hint="Enter Age" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="Email"
             android:id="@+id/textViewEmail" />
 
@@ -115,7 +129,7 @@
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:ems="10"
-            android:id="@+id/editTextPasswrod"
+            android:id="@+id/editTextPassword"
             android:hint="Enter Password" />
 
         <TextView

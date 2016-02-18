@@ -61,7 +61,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         db.execSQL("CREATE TABLE " + USER_TABLE_NAME + "(" +
                 USER_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                USER_COLUMN_USERNAME + " TEXT, " +
+                USER_COLUMN_USERNAME + " TEXT UNIQUE, " +
                 USER_COLUMN_PASSWORD + " TEXT, " +
                 USER_COLUMN_FIRST_NAME + " TEXT, " +
                 USER_COLUMN_LAST_NAME + " TEXT, " +
@@ -93,25 +93,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * @return true if the entry was added in successfully, false otherwise
      */
     public boolean addUser(User user) {
-        if (user.getAge() >= 21) {
-            // Add the entry only if the user is at least 21.
-            ContentValues values = new ContentValues();
-            values.put(USER_COLUMN_USERNAME, user.getUsername());
-            values.put(USER_COLUMN_PASSWORD, user.getPassword());
-            values.put(USER_COLUMN_FIRST_NAME, user.getFirstName());
-            values.put(USER_COLUMN_LAST_NAME, user.getLastName());
-            values.put(USER_COLUMN_EMAIL, user.getEmail());
-            values.put(USER_COLUMN_PHONE, user.getPhoneNumber());
-            values.put(USER_COLUMN_AGE, user.getAge());
-            values.put(USER_COLUMN_GENDER, user.getGender());
-            values.put(USER_COLUMN_COUNTRY, user.getCountry());
+        // Add the entry only if the user is at least 21.
+        ContentValues values = new ContentValues();
+        values.put(USER_COLUMN_USERNAME, user.getUsername());
+        values.put(USER_COLUMN_PASSWORD, user.getPassword());
+        values.put(USER_COLUMN_FIRST_NAME, user.getFirstName());
+        values.put(USER_COLUMN_LAST_NAME, user.getLastName());
+        values.put(USER_COLUMN_EMAIL, user.getEmail());
+        values.put(USER_COLUMN_PHONE, user.getPhoneNumber());
+        values.put(USER_COLUMN_AGE, user.getAge());
+        values.put(USER_COLUMN_GENDER, user.getGender());
+        values.put(USER_COLUMN_COUNTRY, user.getCountry());
 
-            SQLiteDatabase db = getWritableDatabase();
-            db.insert(USER_TABLE_NAME, null, values);
-            db.close();
-            return true;
-        }
-        return false;
+        SQLiteDatabase db = getWritableDatabase();
+        db.insert(USER_TABLE_NAME, null, values);
+        db.close();
+        return true;
     }
 
     /**
@@ -136,10 +133,43 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
+     * Retrieve a user from the database using the username.
+     *
+     * @param username the username of the user to retrieve
+     * @return the user, or null if one does not exist
+     */
+    public User getUser(String username) {
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor c = db.rawQuery("SELECT * FROM " + USER_TABLE_NAME
+                + " WHERE " + USER_COLUMN_USERNAME + " = \"" + username + "\"" , null);
+
+        if (!c.moveToFirst()) {
+            return null;
+        }
+
+        User user = new User();
+        user.setId(c.getInt(c.getColumnIndex(USER_COLUMN_ID)));
+        user.setUsername(username);
+        user.setPassword(c.getString(c.getColumnIndex(USER_COLUMN_PASSWORD)));
+        user.setFirstName(c.getString(c.getColumnIndex(USER_COLUMN_FIRST_NAME)));
+        user.setLastName(c.getString(c.getColumnIndex(USER_COLUMN_LAST_NAME)));
+        user.setEmail(c.getString(c.getColumnIndex(USER_COLUMN_EMAIL)));
+        user.setPhoneNumber(c.getString(c.getColumnIndex(USER_COLUMN_PHONE)));
+        user.setAge(c.getInt(c.getColumnIndex(USER_COLUMN_AGE)));
+        user.setGender(c.getString(c.getColumnIndex(USER_COLUMN_GENDER)));
+        user.setCountry(c.getString(c.getColumnIndex(USER_COLUMN_COUNTRY)));
+
+        c.close();
+
+        return user;
+    }
+
+    /**
      * Retrieve a whiskey from the database using its ID.
      *
      * @param id the ID of the whiskey to retrieve
-     * @return the whiskey
+     * @return the whiskey, or null if one does not exist
      */
     public Whiskey getWhiskey(int id) {
         SQLiteDatabase db = getReadableDatabase();
@@ -148,8 +178,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Cursor c = db.rawQuery("SELECT * FROM " + WHISKEY_TABLE_NAME
                 + " WHERE " + WHISKEY_COLUMN_ID + " = \"" + id + "\"", null);
 
-        if (c != null) {
-            c.moveToFirst();
+        if (!c.moveToFirst()) {
+            return null;
         }
 
         Whiskey whiskey = new Whiskey();
