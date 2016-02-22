@@ -40,10 +40,6 @@ public class MainMenuActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println(isSuccessfulLogin());
-                System.out.println(editTextUsername.getText().toString());
-                System.out.println(editTextPassword.getText().toString());
-
                 if (isSuccessfulLogin()) {
                     Toast.makeText(MainMenuActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(MainMenuActivity.this, NewWhiskeyActivity.class);
