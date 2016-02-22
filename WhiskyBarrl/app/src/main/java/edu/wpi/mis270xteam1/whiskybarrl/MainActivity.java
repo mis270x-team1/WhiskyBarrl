@@ -1,5 +1,7 @@
 package edu.wpi.mis270xteam1.whiskybarrl;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     private EditText editTextUsername;
@@ -37,7 +40,32 @@ public class MainActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Implement user login
+                System.out.println(isSuccessfulLogin());
+                System.out.println(editTextUsername.getText().toString());
+                System.out.println(editTextPassword.getText().toString());
+
+                if (isSuccessfulLogin()) {
+                    Toast.makeText(MainActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(MainActivity.this, NewWhiskeyActivity.class);
+                    startActivity(i);
+                } else {
+                    AlertDialog.Builder loginFailedDialog = new AlertDialog.Builder(MainActivity.this);
+                    loginFailedDialog.setTitle("Login Failed");
+
+                    if (allLoginFieldsEntered()) {
+                        loginFailedDialog.setMessage("Username/password combination does not exist");
+                    } else {
+                        loginFailedDialog.setMessage("Please enter a username and password");
+                    }
+
+                    loginFailedDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    loginFailedDialog.create().show();
+                }
             }
         });
     }
@@ -62,5 +90,35 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean allLoginFieldsEntered() {
+        String loginUsername = editTextUsername.getText().toString();
+        String loginPassword = editTextPassword.getText().toString();
+
+        return loginUsername.trim().length() > 0 && loginPassword.trim().length() > 0;
+    }
+
+    private boolean isSuccessfulLogin() {
+        // Get the username/password attempted and compare it to the one in the database.
+        String loginUsername = editTextUsername.getText().toString();
+        String loginPassword = editTextPassword.getText().toString();
+
+        if (!allLoginFieldsEntered()) {
+            return false;
+        }
+
+        DatabaseHandler db = new DatabaseHandler(this);
+        User loginUser = db.getUser(loginUsername);
+
+        if (loginUser == null) {
+            // No user with this username exists, so login failed.
+            return false;
+        }
+
+        String realUsername = loginUser.getUsername();
+        String realPassword = loginUser.getPassword();
+
+        return realUsername.equals(loginUsername) && realPassword.equals(loginPassword);
     }
 }
