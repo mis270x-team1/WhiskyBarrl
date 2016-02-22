@@ -17,9 +17,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".NewWhiskeyActivity"></activity>
-        <activity
-            android:name=".RegistrationActivity"></activity>
+            android:name=".NewWhiskeyActivity"
+            android:label="@string/title_activity_new_whiskey" />
+        <activity android:name=".AccountActivity" />
+        <activity android:name=".EditProfile" />
+        <activity android:name=".SearchActivity"></activity>
     </application>
 
 </manifest>
