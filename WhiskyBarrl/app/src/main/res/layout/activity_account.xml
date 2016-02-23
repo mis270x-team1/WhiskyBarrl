@@ -38,28 +38,12 @@
             android:layout_gravity="center_horizontal"
             android:layout_weight="0.17" />
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="First Name"
-                android:id="@+id/textViewFName"
-                android:textAlignment="center"
-                android:singleLine="false" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Last Name"
-                android:id="@+id/textViewLName"
-                android:textAlignment="center"
-                android:singleLine="false" />
-        </LinearLayout>
+            android:text="Name"
+            android:id="@+id/textViewFullName"
+            android:layout_gravity="center_horizontal" />
 
         <TextView
             android:layout_width="wrap_content"

@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class MainMenuActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
     private EditText editTextUsername;
     private EditText editTextPassword;
 
@@ -22,7 +22,7 @@ public class MainMenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_menu);
+        setContentView(R.layout.activity_login);
 
         editTextUsername = (EditText) findViewById(R.id.editTextUserName);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
@@ -32,7 +32,7 @@ public class MainMenuActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent registerIntent = new Intent(MainMenuActivity.this, RegistrationActivity.class);
+                Intent registerIntent = new Intent(LoginActivity.this, RegistrationActivity.class);
                 startActivity(registerIntent);
             }
         });
@@ -41,11 +41,12 @@ public class MainMenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (isSuccessfulLogin()) {
-                    Toast.makeText(MainMenuActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(MainMenuActivity.this, NewWhiskeyActivity.class);
+                    Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(LoginActivity.this, AccountActivity.class);
+                    i.putExtra("username", editTextUsername.getText().toString());
                     startActivity(i);
                 } else {
-                    AlertDialog.Builder loginFailedDialog = new AlertDialog.Builder(MainMenuActivity.this);
+                    AlertDialog.Builder loginFailedDialog = new AlertDialog.Builder(LoginActivity.this);
                     loginFailedDialog.setTitle("Login Failed");
 
                     if (allLoginFieldsEntered()) {

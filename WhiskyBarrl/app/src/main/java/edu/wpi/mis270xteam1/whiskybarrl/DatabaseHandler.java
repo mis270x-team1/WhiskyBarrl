@@ -226,6 +226,29 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
+     * Update the information of a user.
+     *
+     * @param user the new user to update it to
+     */
+    public void updateUser(User user) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(USER_COLUMN_USERNAME, user.getUsername());
+        values.put(USER_COLUMN_PASSWORD, user.getPassword());
+        values.put(USER_COLUMN_FIRST_NAME, user.getFirstName());
+        values.put(USER_COLUMN_LAST_NAME, user.getLastName());
+        values.put(USER_COLUMN_EMAIL, user.getEmail());
+        values.put(USER_COLUMN_PHONE, user.getPhoneNumber());
+        values.put(USER_COLUMN_AGE, user.getAge());
+        values.put(USER_COLUMN_GENDER, user.getGender());
+        values.put(USER_COLUMN_COUNTRY, user.getCountry());
+
+        db.update(USER_TABLE_NAME, values, USER_COLUMN_ID + "=" + user.getId(), null);
+        db.close();
+    }
+
+    /**
      * Delete a user from the table given its ID in the database table.
      *
      * @param userId the ID of the user to delete
