@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +52,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 WHISKEY_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 WHISKEY_COLUMN_NAME + " TEXT, " +
                 WHISKEY_COLUMN_DESCRIPTION + " TEXT, " +
-                WHISKEY_COLUMN_RATING + " TEXT, " +
+                WHISKEY_COLUMN_RATING + " REAL, " +
                 WHISKEY_COLUMN_PROOF + " INTEGER, " +
                 WHISKEY_COLUMN_AGE + " INTEGER, " +
                 WHISKEY_COLUMN_LOCATION + " TEXT " +
@@ -186,7 +185,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         whiskey.setId(id);
         whiskey.setName(c.getString(c.getColumnIndex(WHISKEY_COLUMN_NAME)));
         whiskey.setDescription(c.getString(c.getColumnIndex(WHISKEY_COLUMN_DESCRIPTION)));
-        whiskey.setRating(c.getString(c.getColumnIndex(WHISKEY_COLUMN_RATING)));
+        whiskey.setRating(c.getFloat(c.getColumnIndex(WHISKEY_COLUMN_RATING)));
         whiskey.setProofLevel(c.getInt(c.getColumnIndex(WHISKEY_COLUMN_PROOF)));
         whiskey.setLocation(c.getString(c.getColumnIndex(WHISKEY_COLUMN_LOCATION)));
         whiskey.setAge(c.getInt(c.getColumnIndex(WHISKEY_COLUMN_AGE)));
@@ -213,7 +212,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 whiskey.setId(c.getInt(c.getColumnIndex(WHISKEY_COLUMN_ID)));
                 whiskey.setName(c.getString(c.getColumnIndex(WHISKEY_COLUMN_NAME)));
                 whiskey.setDescription(c.getString(c.getColumnIndex(WHISKEY_COLUMN_DESCRIPTION)));
-                whiskey.setRating(c.getString(c.getColumnIndex(WHISKEY_COLUMN_RATING)));
+                whiskey.setRating(c.getFloat(c.getColumnIndex(WHISKEY_COLUMN_RATING)));
                 whiskey.setProofLevel(c.getInt(c.getColumnIndex(WHISKEY_COLUMN_PROOF)));
                 whiskey.setLocation(c.getString(c.getColumnIndex(WHISKEY_COLUMN_LOCATION)));
                 whiskey.setAge(c.getInt(c.getColumnIndex(WHISKEY_COLUMN_AGE)));

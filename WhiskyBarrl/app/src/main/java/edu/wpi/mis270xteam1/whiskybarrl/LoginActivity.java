@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (isSuccessfulLogin()) {
                     Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(LoginActivity.this, AccountActivity.class);
+                    Intent i = new Intent(LoginActivity.this, MainWhiskeyListActivity.class);
                     i.putExtra("username", editTextUsername.getText().toString());
                     startActivity(i);
                 } else {

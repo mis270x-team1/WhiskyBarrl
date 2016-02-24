@@ -22,6 +22,7 @@
         <activity android:name=".EditProfile" />
         <activity android:name=".SearchActivity" />
         <activity android:name=".ViewWhiskey"></activity>
+        <activity android:name=".MainWhiskeyListActivity" />
     </application>
 
 </manifest>
