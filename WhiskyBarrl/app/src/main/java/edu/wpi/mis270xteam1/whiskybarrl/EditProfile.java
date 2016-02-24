@@ -14,19 +14,19 @@ import java.util.List;
 
 public class EditProfile extends Activity {
 
-    String currentUsername;
+    private String currentUsername;
 
-    EditText editTextUsername;
-    EditText editTextFirstName;
-    EditText editTextLastName;
-    EditText editTextEmail;
-    EditText editTextPhoneNumber;
-    EditText editTextGender;
-    EditText editTextCountry;
+    private EditText editTextUsername;
+    private EditText editTextFirstName;
+    private EditText editTextLastName;
+    private EditText editTextEmail;
+    private EditText editTextPhoneNumber;
+    private EditText editTextGender;
+    private EditText editTextCountry;
 
-    Button submitChangesButton;
-    DatabaseHandler db;
-    User currentUser;
+    private Button submitChangesButton;
+    private DatabaseHandler db;
+    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -8,17 +8,17 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class AccountActivity extends AppCompatActivity {
-    String currentUsername;
-    User currentUser;
-    DatabaseHandler db;
+    private String currentUsername;
+    private User currentUser;
+    private DatabaseHandler db;
 
-    Button editProfileButton;
-    TextView textViewFullName;
-    TextView textViewUsername;
-    TextView textViewEmail;
-    TextView textViewPhoneNumber;
-    TextView textViewGender;
-    TextView textViewCountry;
+    private Button editProfileButton;
+    private TextView textViewFullName;
+    private TextView textViewUsername;
+    private TextView textViewEmail;
+    private TextView textViewPhoneNumber;
+    private TextView textViewGender;
+    private TextView textViewCountry;
 
     private static final int UPDATE_USER_REQUEST = 1;
 
