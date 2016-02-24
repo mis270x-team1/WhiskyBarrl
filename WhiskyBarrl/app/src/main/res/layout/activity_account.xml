@@ -41,6 +41,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Name"
             android:id="@+id/textViewFullName"
             android:layout_gravity="center_horizontal" />
@@ -48,6 +49,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Username"
             android:id="@+id/textViewUsername"
             android:layout_gravity="center_horizontal" />
@@ -55,6 +57,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Email"
             android:id="@+id/textViewEmail"
             android:layout_gravity="center_horizontal" />
@@ -62,6 +65,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Phone Number"
             android:id="@+id/textViewPN"
             android:layout_gravity="center_horizontal" />
@@ -69,6 +73,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Gender"
             android:id="@+id/textViewGender"
             android:layout_gravity="center_horizontal" />
@@ -76,21 +81,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Country"
             android:id="@+id/textViewCountry"
             android:layout_gravity="center_horizontal" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Whiskey List"
-            android:id="@+id/buttonWL" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Wish List"
-            android:id="@+id/buttonWishList" />
 
         <Button
             android:layout_width="match_parent"
