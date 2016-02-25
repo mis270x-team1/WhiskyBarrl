@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -14,16 +16,30 @@ public class MainWhiskeyListActivity extends AppCompatActivity {
 
     private ListView whiskeyListView;
     private DatabaseHandler db;
+    private String currentUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_whiskey_list);
 
+        currentUsername = getIntent().getStringExtra("username");
         whiskeyListView = (ListView) findViewById(R.id.whiskeyListView);
         db = new DatabaseHandler(this);
 
         loadWhiskeys();
+
+        whiskeyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Whiskey selectedWhiskey = (Whiskey) parent.getItemAtPosition(position);
+                int whiskeyId = selectedWhiskey.getId();
+                Intent i = new Intent(MainWhiskeyListActivity.this, ViewWhiskey.class);
+                i.putExtra("username", currentUsername);
+                i.putExtra("whiskeyId", whiskeyId);
+                startActivity(i);
+            }
+        });
     }
 
     @Override

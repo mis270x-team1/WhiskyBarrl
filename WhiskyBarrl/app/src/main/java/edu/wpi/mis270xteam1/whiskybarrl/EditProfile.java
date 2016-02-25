@@ -1,18 +1,14 @@
 package edu.wpi.mis270xteam1.whiskybarrl;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class EditProfile extends Activity {
+public class EditProfile extends AppCompatActivity {
 
     private String currentUsername;
 

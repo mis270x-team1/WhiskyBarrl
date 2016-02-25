@@ -29,10 +29,15 @@
             android:name=".EditProfile"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".SearchActivity" />
-        <activity android:name=".ViewWhiskey"></activity>
+        <activity
+            android:name=".ViewWhiskey"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".MainWhiskeyListActivity"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+        <activity
+            android:name=".WhiskeyCommentListActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 
 </manifest>

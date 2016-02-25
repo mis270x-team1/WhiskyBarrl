@@ -1,7 +1,7 @@
 package edu.wpi.mis270xteam1.whiskybarrl;
 
 import android.os.Bundle;
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
@@ -9,9 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.List;
-
-public class RegistrationActivity extends Activity {
+public class RegistrationActivity extends AppCompatActivity {
 
     private EditText editTextUsername;
     private EditText editTextFirstName;
