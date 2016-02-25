@@ -7,7 +7,7 @@ public class Whiskey {
     private int id;
     private String name;
     private String description;
-    private String rating;
+    private float rating;
     private int proofLevel;
     private int age;
     private String location;
@@ -43,11 +43,11 @@ public class Whiskey {
         this.description = description;
     }
 
-    public String getRating() {
+    public float getRating() {
         return rating;
     }
 
-    public void setRating(String rating) {
+    public void setRating(float rating) {
         this.rating = rating;
     }
 

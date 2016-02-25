@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +16,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "WhiskyBarrl.db";
 
+    // Table name and columns for users table
     private static final String USER_TABLE_NAME = "Users";
     private static final String USER_COLUMN_ID = "_id";
     private static final String USER_COLUMN_USERNAME = "Username";
@@ -29,6 +29,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String USER_COLUMN_GENDER = "Gender";
     private static final String USER_COLUMN_COUNTRY = "Country";
 
+    // Table name and columns for whiskeys table
     private static final String WHISKEY_TABLE_NAME = "Whiskeys";
     private static final String WHISKEY_COLUMN_ID = "_id";
     private static final String WHISKEY_COLUMN_NAME = "Name";
@@ -37,6 +38,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String WHISKEY_COLUMN_PROOF = "Proof";
     private static final String WHISKEY_COLUMN_AGE = "Age";
     private static final String WHISKEY_COLUMN_LOCATION = "Location";
+
+    // Columns for whiskey comments table
+    private static final String WHISKEY_COMMENT_TABLE_NAME = "WhiskeyComments";
+    private static final String WHISKEY_COMMENT_COLUMN_ID = "_id";
+    private static final String WHISKEY_COMMENT_COLUMN_COMMENT_TEXT = "CommentText";
+    private static final String WHISKEY_COMMENT_COLUMN_COMMENT_USER_ID = "UserID";
+    private static final String WHISKEY_COMMENT_COLUMN_COMMENT_WHISKEY_ID = "WhiskeyID";
 
     private Context context;
 
@@ -53,7 +61,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 WHISKEY_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 WHISKEY_COLUMN_NAME + " TEXT, " +
                 WHISKEY_COLUMN_DESCRIPTION + " TEXT, " +
-                WHISKEY_COLUMN_RATING + " TEXT, " +
+                WHISKEY_COLUMN_RATING + " REAL, " +
                 WHISKEY_COLUMN_PROOF + " INTEGER, " +
                 WHISKEY_COLUMN_AGE + " INTEGER, " +
                 WHISKEY_COLUMN_LOCATION + " TEXT " +
@@ -71,6 +79,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 USER_COLUMN_GENDER + " TEXT, " +
                 USER_COLUMN_COUNTRY + " TEXT " +
                 ");");
+
+        db.execSQL("CREATE TABLE " + WHISKEY_COMMENT_TABLE_NAME + "(" +
+                WHISKEY_COMMENT_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                WHISKEY_COMMENT_COLUMN_COMMENT_TEXT + " TEXT, " +
+                WHISKEY_COMMENT_COLUMN_COMMENT_USER_ID + " INTEGER, " +
+                WHISKEY_COMMENT_COLUMN_COMMENT_WHISKEY_ID + " INTEGER, " +
+                "FOREIGN KEY(" +
+                WHISKEY_COMMENT_COLUMN_COMMENT_USER_ID +
+                ") REFERENCES " + USER_TABLE_NAME + "(" + USER_COLUMN_ID + "), " +
+                "FOREIGN KEY(" +
+                WHISKEY_COMMENT_COLUMN_COMMENT_WHISKEY_ID +
+                ") REFERENCES " + WHISKEY_TABLE_NAME + "(" + WHISKEY_COLUMN_ID + ")" +
+                ");");
     }
 
     @Override
@@ -78,6 +99,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // Drop existing tables and recreate them.
         db.execSQL("DROP TABLE IF EXISTS " + WHISKEY_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + WHISKEY_COMMENT_TABLE_NAME);
         onCreate(db);
     }
 
@@ -133,6 +155,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
+     * Add a comment for a whiskey into the whiskey comments database table.
+     *
+     * @param whiskeyComment the whiskey comment to store
+     * @return true if the entry was added in successfully, false otherwise
+     */
+    public boolean addWhiskeyComment(WhiskeyComment whiskeyComment) {
+        ContentValues values = new ContentValues();
+        values.put(WHISKEY_COMMENT_COLUMN_COMMENT_TEXT, whiskeyComment.getCommentText());
+        values.put(WHISKEY_COMMENT_COLUMN_COMMENT_USER_ID, whiskeyComment.getUserId());
+        values.put(WHISKEY_COMMENT_COLUMN_COMMENT_WHISKEY_ID, whiskeyComment.getWhiskeyId());
+
+        SQLiteDatabase db = getWritableDatabase();
+        db.insert(WHISKEY_COMMENT_TABLE_NAME, null, values);
+        db.close();
+        return true;
+    }
+
+    /**
      * Retrieve a user from the database using the username.
      *
      * @param username the username of the user to retrieve
@@ -142,7 +182,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
 
         Cursor c = db.rawQuery("SELECT * FROM " + USER_TABLE_NAME
-                + " WHERE " + USER_COLUMN_USERNAME + " = \"" + username + "\"" , null);
+                + " WHERE " + USER_COLUMN_USERNAME + " = \"" + username + "\";" , null);
 
         if (!c.moveToFirst()) {
             return null;
@@ -151,6 +191,39 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         User user = new User();
         user.setId(c.getInt(c.getColumnIndex(USER_COLUMN_ID)));
         user.setUsername(username);
+        user.setPassword(c.getString(c.getColumnIndex(USER_COLUMN_PASSWORD)));
+        user.setFirstName(c.getString(c.getColumnIndex(USER_COLUMN_FIRST_NAME)));
+        user.setLastName(c.getString(c.getColumnIndex(USER_COLUMN_LAST_NAME)));
+        user.setEmail(c.getString(c.getColumnIndex(USER_COLUMN_EMAIL)));
+        user.setPhoneNumber(c.getString(c.getColumnIndex(USER_COLUMN_PHONE)));
+        user.setAge(c.getInt(c.getColumnIndex(USER_COLUMN_AGE)));
+        user.setGender(c.getString(c.getColumnIndex(USER_COLUMN_GENDER)));
+        user.setCountry(c.getString(c.getColumnIndex(USER_COLUMN_COUNTRY)));
+
+        c.close();
+
+        return user;
+    }
+
+    /**
+     * Retrieve a user from the database using the ID.
+     *
+     * @param userId the ID of the user to retrieve
+     * @return the user, or null if one does not exist
+     */
+    public User getUserById(int userId) {
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor c = db.rawQuery("SELECT * FROM " + USER_TABLE_NAME
+                + " WHERE " + USER_COLUMN_ID + " = \"" + userId + "\";", null);
+
+        if (!c.moveToFirst()) {
+            return null;
+        }
+
+        User user = new User();
+        user.setId(c.getInt(userId));
+        user.setUsername(c.getString(c.getColumnIndex(USER_COLUMN_USERNAME)));
         user.setPassword(c.getString(c.getColumnIndex(USER_COLUMN_PASSWORD)));
         user.setFirstName(c.getString(c.getColumnIndex(USER_COLUMN_FIRST_NAME)));
         user.setLastName(c.getString(c.getColumnIndex(USER_COLUMN_LAST_NAME)));
@@ -176,7 +249,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
         Cursor c = db.rawQuery("SELECT * FROM " + WHISKEY_TABLE_NAME
-                + " WHERE " + WHISKEY_COLUMN_ID + " = \"" + id + "\"", null);
+                + " WHERE " + WHISKEY_COLUMN_ID + " = \"" + id + "\";", null);
 
         if (!c.moveToFirst()) {
             return null;
@@ -186,7 +259,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         whiskey.setId(id);
         whiskey.setName(c.getString(c.getColumnIndex(WHISKEY_COLUMN_NAME)));
         whiskey.setDescription(c.getString(c.getColumnIndex(WHISKEY_COLUMN_DESCRIPTION)));
-        whiskey.setRating(c.getString(c.getColumnIndex(WHISKEY_COLUMN_RATING)));
+        whiskey.setRating(c.getFloat(c.getColumnIndex(WHISKEY_COLUMN_RATING)));
         whiskey.setProofLevel(c.getInt(c.getColumnIndex(WHISKEY_COLUMN_PROOF)));
         whiskey.setLocation(c.getString(c.getColumnIndex(WHISKEY_COLUMN_LOCATION)));
         whiskey.setAge(c.getInt(c.getColumnIndex(WHISKEY_COLUMN_AGE)));
@@ -213,11 +286,38 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 whiskey.setId(c.getInt(c.getColumnIndex(WHISKEY_COLUMN_ID)));
                 whiskey.setName(c.getString(c.getColumnIndex(WHISKEY_COLUMN_NAME)));
                 whiskey.setDescription(c.getString(c.getColumnIndex(WHISKEY_COLUMN_DESCRIPTION)));
-                whiskey.setRating(c.getString(c.getColumnIndex(WHISKEY_COLUMN_RATING)));
+                whiskey.setRating(c.getFloat(c.getColumnIndex(WHISKEY_COLUMN_RATING)));
                 whiskey.setProofLevel(c.getInt(c.getColumnIndex(WHISKEY_COLUMN_PROOF)));
                 whiskey.setLocation(c.getString(c.getColumnIndex(WHISKEY_COLUMN_LOCATION)));
                 whiskey.setAge(c.getInt(c.getColumnIndex(WHISKEY_COLUMN_AGE)));
                 results.add(whiskey);
+            } while (c.moveToNext());
+        }
+        c.close();
+
+        return results;
+    }
+
+    /**
+     * Get all the whiskeys from the database.
+     *
+     * @return an array adapter with the whiskeys retrieved
+     */
+    public List<WhiskeyComment> getWhiskeyComments(int whiskeyId) {
+        SQLiteDatabase db = getWritableDatabase();
+        List<WhiskeyComment> results = new ArrayList<>();
+
+        Cursor c = db.rawQuery("SELECT * FROM " + WHISKEY_COMMENT_TABLE_NAME
+                + " WHERE " + WHISKEY_COMMENT_COLUMN_COMMENT_WHISKEY_ID + " = \"" + whiskeyId + "\";", null);
+
+        if (c.moveToFirst()) {
+            do {
+                WhiskeyComment whiskeyComment = new WhiskeyComment();
+                whiskeyComment.setId(c.getInt(c.getColumnIndex(WHISKEY_COMMENT_COLUMN_ID)));
+                whiskeyComment.setCommentText(c.getString(c.getColumnIndex(WHISKEY_COMMENT_COLUMN_COMMENT_TEXT)));
+                whiskeyComment.setUserId(c.getInt(c.getColumnIndex(WHISKEY_COMMENT_COLUMN_COMMENT_USER_ID)));
+                whiskeyComment.setWhiskeyId(c.getInt(c.getColumnIndex(WHISKEY_COMMENT_COLUMN_COMMENT_WHISKEY_ID)));
+                results.add(whiskeyComment);
             } while (c.moveToNext());
         }
         c.close();

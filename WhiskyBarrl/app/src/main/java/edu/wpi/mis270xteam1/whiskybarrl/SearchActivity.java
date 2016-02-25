@@ -1,9 +1,9 @@
 package edu.wpi.mis270xteam1.whiskybarrl;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
-public class SearchActivity extends Activity {
+public class SearchActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

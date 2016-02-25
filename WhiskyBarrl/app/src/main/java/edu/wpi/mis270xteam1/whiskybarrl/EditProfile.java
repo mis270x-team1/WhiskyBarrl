@@ -1,32 +1,28 @@
 package edu.wpi.mis270xteam1.whiskybarrl;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
+public class EditProfile extends AppCompatActivity {
 
-public class EditProfile extends Activity {
+    private String currentUsername;
 
-    String currentUsername;
+    private EditText editTextUsername;
+    private EditText editTextFirstName;
+    private EditText editTextLastName;
+    private EditText editTextEmail;
+    private EditText editTextPhoneNumber;
+    private EditText editTextGender;
+    private EditText editTextCountry;
 
-    EditText editTextUsername;
-    EditText editTextFirstName;
-    EditText editTextLastName;
-    EditText editTextEmail;
-    EditText editTextPhoneNumber;
-    EditText editTextGender;
-    EditText editTextCountry;
-
-    Button submitChangesButton;
-    DatabaseHandler db;
-    User currentUser;
+    private Button submitChangesButton;
+    private DatabaseHandler db;
+    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
