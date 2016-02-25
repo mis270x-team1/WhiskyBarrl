@@ -9,20 +9,30 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".LoginActivity"
-            android:label="@string/app_name">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegistrationActivity" />
-        <activity android:name=".NewWhiskeyActivity" />
-        <activity android:name=".AccountActivity" />
-        <activity android:name=".EditProfile" />
+        <activity
+            android:name=".RegistrationActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".NewWhiskeyActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".AccountActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".EditProfile"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".SearchActivity" />
         <activity android:name=".ViewWhiskey"></activity>
-        <activity android:name=".MainWhiskeyListActivity" />
+        <activity
+            android:name=".MainWhiskeyListActivity"
+            android:theme="@style/Theme.AppCompat.Light" />
     </application>
 
 </manifest>

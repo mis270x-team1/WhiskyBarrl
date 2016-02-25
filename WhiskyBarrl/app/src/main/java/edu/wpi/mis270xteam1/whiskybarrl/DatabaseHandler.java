@@ -16,6 +16,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "WhiskyBarrl.db";
 
+    // Columns for users table
     private static final String USER_TABLE_NAME = "Users";
     private static final String USER_COLUMN_ID = "_id";
     private static final String USER_COLUMN_USERNAME = "Username";
@@ -28,6 +29,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String USER_COLUMN_GENDER = "Gender";
     private static final String USER_COLUMN_COUNTRY = "Country";
 
+    // Columns for whiskeys table
     private static final String WHISKEY_TABLE_NAME = "Whiskeys";
     private static final String WHISKEY_COLUMN_ID = "_id";
     private static final String WHISKEY_COLUMN_NAME = "Name";

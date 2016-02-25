@@ -20,6 +20,7 @@ public class WhiskeyListAdapter extends ArrayAdapter<Whiskey> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        // Part of this taken from http://www.vogella.com/tutorials/AndroidListView/article.html
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View listItemView = inflater.inflate(R.layout.whiskey_list_entry, parent, false);
 
@@ -32,6 +33,6 @@ public class WhiskeyListAdapter extends ArrayAdapter<Whiskey> {
         whiskeyNameView.setText(whiskey.getName());
         ratingBar.setRating(whiskey.getRating());
 
-        return super.getView(position, convertView, parent);
+        return listItemView;
     }
 }
