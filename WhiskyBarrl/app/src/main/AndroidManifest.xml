@@ -32,7 +32,7 @@
         <activity android:name=".ViewWhiskey"></activity>
         <activity
             android:name=".MainWhiskeyListActivity"
-            android:theme="@style/Theme.AppCompat.Light" />
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
     </application>
 
 </manifest>

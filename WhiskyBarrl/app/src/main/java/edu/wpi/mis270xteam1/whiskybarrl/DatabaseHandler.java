@@ -16,7 +16,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "WhiskyBarrl.db";
 
-    // Columns for users table
+    // Table name and columns for users table
     private static final String USER_TABLE_NAME = "Users";
     private static final String USER_COLUMN_ID = "_id";
     private static final String USER_COLUMN_USERNAME = "Username";
@@ -29,7 +29,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String USER_COLUMN_GENDER = "Gender";
     private static final String USER_COLUMN_COUNTRY = "Country";
 
-    // Columns for whiskeys table
+    // Table name and columns for whiskeys table
     private static final String WHISKEY_TABLE_NAME = "Whiskeys";
     private static final String WHISKEY_COLUMN_ID = "_id";
     private static final String WHISKEY_COLUMN_NAME = "Name";
@@ -38,6 +38,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String WHISKEY_COLUMN_PROOF = "Proof";
     private static final String WHISKEY_COLUMN_AGE = "Age";
     private static final String WHISKEY_COLUMN_LOCATION = "Location";
+
+    // Columns for whiskey comments table
+    private static final String WHISKEY_COMMENT_TABLE_NAME = "WhiskeyComments";
+    private static final String WHISKEY_COMMENT_COLUMN_ID = "_id";
+    private static final String WHISKEY_COMMENT_COLUMN_COMMENT_TEXT = "CommentText";
+    private static final String WHISKEY_COMMENT_COLUMN_COMMENT_USER_ID = "UserID";
+    private static final String WHISKEY_COMMENT_COLUMN_COMMENT_WHISKEY_ID = "WhiskeyID";
 
     private Context context;
 
@@ -71,6 +78,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 USER_COLUMN_AGE + " INTEGER, " +
                 USER_COLUMN_GENDER + " TEXT, " +
                 USER_COLUMN_COUNTRY + " TEXT " +
+                ");");
+
+        db.execSQL("CREATE TABLE " + WHISKEY_COMMENT_TABLE_NAME + "(" +
+                WHISKEY_COMMENT_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                WHISKEY_COMMENT_COLUMN_COMMENT_TEXT + " TEXT, " +
+                WHISKEY_COMMENT_COLUMN_COMMENT_USER_ID + " INTEGER, " +
+                WHISKEY_COMMENT_COLUMN_COMMENT_WHISKEY_ID + " INTEGER, " +
+                "FOREIGN KEY(" +
+                WHISKEY_COMMENT_COLUMN_COMMENT_USER_ID +
+                ") REFERENCES " + USER_TABLE_NAME + "(" + USER_COLUMN_ID + "), " +
+                "FOREIGN KEY(" +
+                WHISKEY_COMMENT_COLUMN_COMMENT_WHISKEY_ID +
+                ") REFERENCES " + WHISKEY_TABLE_NAME + "(" + WHISKEY_COLUMN_ID + ")" +
                 ");");
     }
 
@@ -129,6 +149,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase db = getWritableDatabase();
         db.insert(WHISKEY_TABLE_NAME, null, values);
+        db.close();
+        return true;
+    }
+
+    /**
+     * Add a comment for a whiskey into the whiskey comments database table.
+     *
+     * @param whiskeyComment the whiskey comment to store
+     * @return true if the entry was added in successfully, false otherwise
+     */
+    public boolean addWhiskeyComment(WhiskeyComment whiskeyComment) {
+        ContentValues values = new ContentValues();
+        values.put(WHISKEY_COMMENT_COLUMN_COMMENT_TEXT, whiskeyComment.getCommentText());
+        values.put(WHISKEY_COMMENT_COLUMN_COMMENT_USER_ID, whiskeyComment.getUserId());
+        values.put(WHISKEY_COMMENT_COLUMN_COMMENT_WHISKEY_ID, whiskeyComment.getWhiskeyId());
+
+        SQLiteDatabase db = getWritableDatabase();
+        db.insert(WHISKEY_COMMENT_TABLE_NAME, null, values);
         db.close();
         return true;
     }
