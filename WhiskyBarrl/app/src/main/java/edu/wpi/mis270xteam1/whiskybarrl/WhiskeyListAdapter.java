@@ -25,7 +25,7 @@ public class WhiskeyListAdapter extends ArrayAdapter<Whiskey> {
         View listItemView = inflater.inflate(R.layout.whiskey_list_entry, parent, false);
 
         TextView whiskeyNameView = (TextView) listItemView.findViewById(R.id.textViewWN1);
-        TextView usernameView = (TextView) listItemView.findViewById(R.id.textViewUser1);
+        //TextView usernameView = (TextView) listItemView.findViewById(R.id.textViewUser1);
         RatingBar ratingBar = (RatingBar) listItemView.findViewById(R.id.ratingBar2);
 
         Whiskey whiskey = whiskeys[position];
