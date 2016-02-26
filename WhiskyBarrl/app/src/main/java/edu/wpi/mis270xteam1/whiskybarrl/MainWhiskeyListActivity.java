@@ -17,6 +17,7 @@ public class MainWhiskeyListActivity extends Fragment {
     private ListView whiskeyListView;
     private DatabaseHandler db;
     private String currentUsername;
+    private WhiskeyListAdapter whiskeyListAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +52,7 @@ public class MainWhiskeyListActivity extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        loadWhiskeys();
+        whiskeyListAdapter.notifyDataSetChanged();
     }
 
     private void loadWhiskeys() {
@@ -59,7 +60,7 @@ public class MainWhiskeyListActivity extends Fragment {
         List<Whiskey> whiskeys = db.getAllWhiskeys();
         Whiskey[] whiskeyArray = whiskeys.toArray(new Whiskey[whiskeys.size()]);
 
-        ArrayAdapter<Whiskey> whiskeyListAdapter = new WhiskeyListAdapter(getActivity(), whiskeyArray);
+        whiskeyListAdapter = new WhiskeyListAdapter(getActivity(), whiskeyArray);
         whiskeyListView.setAdapter(whiskeyListAdapter);
     }
 }
