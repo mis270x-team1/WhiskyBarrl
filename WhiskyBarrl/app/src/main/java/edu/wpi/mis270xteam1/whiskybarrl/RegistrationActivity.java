@@ -53,6 +53,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     User user = createNewUser();
                     dbHandler.addUser(user);
                     Toast.makeText(RegistrationActivity.this, "Account successfully registered.", Toast.LENGTH_SHORT).show();
+                    finish();
                 } else {
                     String errorMessage = getRegistrationErrorMessage();
                     Toast.makeText(RegistrationActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
