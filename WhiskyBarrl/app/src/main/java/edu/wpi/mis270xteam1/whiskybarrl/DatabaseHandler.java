@@ -365,6 +365,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
+     * Check if a user has included a given whiskey in their favorites.
+     *
+     * @param user the user to check for
+     * @param whiskey the whiskey to check for
+     * @return true if the whiskey is a favorite of the user, false otherwise
+     */
+    public boolean isFavorite(User user, Whiskey whiskey) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        Cursor c = db.rawQuery("SELECT * FROM " + FAVORITES_TABLE_NAME
+                + " WHERE " + FAVORITES_COLUMN_USER_ID + " = " + user.getId() +
+                " AND " + FAVORITES_COLUMN_WHISKEY_ID + " = " + whiskey.getId(), null);
+
+        // moveToFirst returns false if the cursor is empty.
+        return c.moveToFirst();
+    }
+
+    /**
      * Get all whiskey favorites for a given user.
      *
      * @param user the user to get the favorites for
