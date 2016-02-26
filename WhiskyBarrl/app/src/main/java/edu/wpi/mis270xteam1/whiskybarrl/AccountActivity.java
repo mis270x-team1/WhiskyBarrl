@@ -13,6 +13,7 @@ public class AccountActivity extends AppCompatActivity {
     private DatabaseHandler db;
 
     private Button editProfileButton;
+    private Button favoritesButton;
     private TextView textViewFullName;
     private TextView textViewUsername;
     private TextView textViewEmail;
@@ -32,6 +33,7 @@ public class AccountActivity extends AppCompatActivity {
         currentUser = db.getUser(currentUsername);
 
         editProfileButton = (Button) findViewById(R.id.buttonEP);
+        favoritesButton = (Button) findViewById(R.id.favoritesButton);
         textViewFullName = (TextView) findViewById(R.id.textViewFullName);
         textViewUsername = (TextView) findViewById(R.id.textViewUsername);
         textViewEmail = (TextView) findViewById(R.id.textViewEmail);
@@ -47,6 +49,15 @@ public class AccountActivity extends AppCompatActivity {
                 Intent i = new Intent(AccountActivity.this, EditProfile.class);
                 i.putExtra("username", currentUsername);
                 startActivityForResult(i, UPDATE_USER_REQUEST);
+            }
+        });
+
+        favoritesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(AccountActivity.this, UserFavoritesActivity.class);
+                i.putExtra("username", currentUsername);
+                startActivity(i);
             }
         });
     }
