@@ -24,6 +24,7 @@ public class ViewWhiskey extends AppCompatActivity {
     private EditText commentEditText;
     private Button submitCommentButton;
     private Button viewCommentsButton;
+    private Button addFavoriteButton;
 
     private int whiskeyId;
     private String currentUsername;
@@ -48,6 +49,7 @@ public class ViewWhiskey extends AppCompatActivity {
         commentEditText = (EditText) findViewById(R.id.editTextEnterComment);
         submitCommentButton = (Button) findViewById(R.id.commentSubmitButton);
         viewCommentsButton = (Button) findViewById(R.id.viewCommentsListButton);
+        addFavoriteButton = (Button) findViewById(R.id.addFavoriteButton);
 
         ratingBar.setFocusable(false);
 
@@ -78,6 +80,19 @@ public class ViewWhiskey extends AppCompatActivity {
                 Intent i = new Intent(ViewWhiskey.this, WhiskeyCommentListActivity.class);
                 i.putExtra("whiskeyId", whiskeyId);
                 startActivity(i);
+            }
+        });
+
+        addFavoriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                User user = db.getUser(currentUsername);
+                db.addFavorite(user, whiskey);
+                Toast.makeText(
+                        ViewWhiskey.this,
+                        "Added " + whiskey.getName() + " to Favorites",
+                        Toast.LENGTH_SHORT
+                ).show();
             }
         });
     }

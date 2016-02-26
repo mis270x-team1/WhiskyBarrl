@@ -39,12 +39,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String WHISKEY_COLUMN_AGE = "Age";
     private static final String WHISKEY_COLUMN_LOCATION = "Location";
 
-    // Columns for whiskey comments table
+    // Table name and columns for whiskey comments table
     private static final String WHISKEY_COMMENT_TABLE_NAME = "WhiskeyComments";
     private static final String WHISKEY_COMMENT_COLUMN_ID = "_id";
     private static final String WHISKEY_COMMENT_COLUMN_COMMENT_TEXT = "CommentText";
     private static final String WHISKEY_COMMENT_COLUMN_COMMENT_USER_ID = "UserID";
     private static final String WHISKEY_COMMENT_COLUMN_COMMENT_WHISKEY_ID = "WhiskeyID";
+
+    // Table name and columns for favorites table
+    private static final String FAVORITES_TABLE_NAME = "UserWhiskeys";
+    private static final String FAVORITES_COLUMN_USER_ID = "UserID";
+    private static final String FAVORITES_COLUMN_WHISKEY_ID = "WhiskeyID";
 
     private Context context;
 
@@ -92,6 +97,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 WHISKEY_COMMENT_COLUMN_COMMENT_WHISKEY_ID +
                 ") REFERENCES " + WHISKEY_TABLE_NAME + "(" + WHISKEY_COLUMN_ID + ")" +
                 ");");
+
+        db.execSQL("CREATE TABLE " + FAVORITES_TABLE_NAME + "(" +
+                FAVORITES_COLUMN_USER_ID + " INTEGER NOT NULL, " +
+                FAVORITES_COLUMN_WHISKEY_ID + " INTEGER NOT NULL, " +
+                "PRIMARY KEY ( "
+                + FAVORITES_COLUMN_USER_ID + ", "
+                + FAVORITES_COLUMN_WHISKEY_ID + ")," +
+                " FOREIGN KEY (" + FAVORITES_COLUMN_USER_ID +
+                ") REFERENCES " + USER_TABLE_NAME + "(" + USER_COLUMN_ID + "), " +
+                " FOREIGN KEY (" + FAVORITES_COLUMN_WHISKEY_ID +
+                ") REFERENCES " + WHISKEY_TABLE_NAME + "(" + WHISKEY_COLUMN_ID + ")"
+                + ");");
     }
 
     @Override
@@ -100,6 +117,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + WHISKEY_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + WHISKEY_COMMENT_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + FAVORITES_TABLE_NAME);
         onCreate(db);
     }
 
@@ -173,6 +191,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
+     * Add a favorite whiskey for a user into the database.
+     *
+     * @param user the user who favorited the whiskey
+     * @param whiskey the whiskey that was favorited
+     * @return true if the entry was added in successfully, false otherwise
+     */
+    public boolean addFavorite(User user, Whiskey whiskey) {
+        int userId = user.getId();
+        int whiskeyId = whiskey.getId();
+
+        ContentValues values = new ContentValues();
+        values.put(FAVORITES_COLUMN_USER_ID, userId);
+        values.put(FAVORITES_COLUMN_WHISKEY_ID, whiskeyId);
+
+        SQLiteDatabase db = getWritableDatabase();
+        db.insert(FAVORITES_TABLE_NAME, null, values);
+        db.close();
+        return true;
+    }
+
+    /**
      * Retrieve a user from the database using the username.
      *
      * @param username the username of the user to retrieve
@@ -182,7 +221,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
 
         Cursor c = db.rawQuery("SELECT * FROM " + USER_TABLE_NAME
-                + " WHERE " + USER_COLUMN_USERNAME + " = \"" + username + "\";" , null);
+                + " WHERE " + USER_COLUMN_USERNAME + " = \"" + username + "\";", null);
 
         if (!c.moveToFirst()) {
             return null;
@@ -326,6 +365,52 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
+     * Get all whiskey favorites for a given user.
+     *
+     * @param user the user to get the favorites for
+     * @return the list of whiskeys the given user has favorited
+     */
+    public List<Whiskey> getUserFavorites(User user) {
+        SQLiteDatabase db = getWritableDatabase();
+        List<Whiskey> results = new ArrayList<>();
+
+        /* SQL query taken from here:
+         * http://stackoverflow.com/questions/7805039/multiple-to-multiple-junction-tables-newbie-on-database-structure
+         */
+        String query = "SELECT " + WHISKEY_TABLE_NAME + ".*, " +
+                USER_TABLE_NAME + "." + USER_COLUMN_USERNAME +
+                " FROM " + USER_TABLE_NAME +
+                " INNER JOIN (" +
+                WHISKEY_TABLE_NAME + " INNER JOIN " + FAVORITES_TABLE_NAME +
+                " ON " + WHISKEY_TABLE_NAME + "." + WHISKEY_COLUMN_ID + " = " +
+                FAVORITES_TABLE_NAME + "." + FAVORITES_COLUMN_WHISKEY_ID + ")" +
+                " ON " + USER_TABLE_NAME + "." + USER_COLUMN_ID + " = " +
+                FAVORITES_TABLE_NAME + "." + FAVORITES_COLUMN_USER_ID +
+                " WHERE " + USER_TABLE_NAME + "." + USER_COLUMN_ID +
+                " = \"" + user.getId() + "\"" +
+                ";";
+
+        Cursor c = db.rawQuery(query, null);
+
+        if (c.moveToFirst()) {
+            do {
+                Whiskey whiskey = new Whiskey();
+                whiskey.setId(c.getInt(c.getColumnIndex(WHISKEY_TABLE_NAME + "." + WHISKEY_COLUMN_ID)));
+                whiskey.setName(c.getString(c.getColumnIndex(WHISKEY_COLUMN_NAME)));
+                whiskey.setDescription(c.getString(c.getColumnIndex(WHISKEY_COLUMN_DESCRIPTION)));
+                whiskey.setRating(c.getFloat(c.getColumnIndex(WHISKEY_COLUMN_RATING)));
+                whiskey.setProofLevel(c.getInt(c.getColumnIndex(WHISKEY_COLUMN_PROOF)));
+                whiskey.setLocation(c.getString(c.getColumnIndex(WHISKEY_COLUMN_LOCATION)));
+                whiskey.setAge(c.getInt(c.getColumnIndex(WHISKEY_COLUMN_AGE)));
+                results.add(whiskey);
+            } while (c.moveToNext());
+        }
+        c.close();
+
+        return results;
+    }
+
+    /**
      * Update the information of a user.
      *
      * @param user the new user to update it to
@@ -349,24 +434,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Delete a user from the table given its ID in the database table.
+     * Delete a favorite entry from the table given the user and whiskey
      *
-     * @param userId the ID of the user to delete
+     * @param user the user that created the favorite entry
+     * @param whiskey the whiskey that was favorited
      */
-    public void deleteUser(String userId) {
+    public void deleteFavorite(User user, Whiskey whiskey) {
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("DELETE FROM " + USER_TABLE_NAME + " WHERE " +
-                USER_COLUMN_ID + "= \"" + userId + "\";");
-    }
-
-    /**
-     * Delete a whiskey from the table given its ID in the database table.
-     *
-     * @param whiskeyId the ID of the whiskey to delete
-     */
-    public void deleteWhiskey(String whiskeyId) {
-        SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("DELETE FROM " + WHISKEY_TABLE_NAME + " WHERE " +
-                WHISKEY_COLUMN_ID + "= \"" + whiskeyId + "\";");
+        db.execSQL("DELETE FROM " + FAVORITES_TABLE_NAME + " WHERE " +
+                FAVORITES_COLUMN_USER_ID + "= \"" + user.getId() + "\" AND " +
+                FAVORITES_COLUMN_WHISKEY_ID + "= \"" + whiskey.getId() + "\";");
+        db.close();
     }
 }
