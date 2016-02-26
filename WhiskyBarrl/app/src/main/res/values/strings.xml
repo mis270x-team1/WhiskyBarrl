@@ -5,4 +5,5 @@
     <string name="new_whiskey">Add Whiskey</string>
     <string name="no_comments">No Comments</string>
     <string name="no_favorites">You have not favorited any whiskeys.</string>
+    <string name="logout">Log Out</string>
 </resources>

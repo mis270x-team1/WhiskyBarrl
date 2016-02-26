@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = (Button) findViewById(R.id.buttonLogIn);
         registerButton = (Button) findViewById(R.id.buttonRegister);
         rememberMeCheckbox = (CheckBox) findViewById(R.id.rememberMeCheckbox);
-        preferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+        preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         getLoginCredentials();
 

@@ -14,6 +14,7 @@ public class AccountActivity extends AppCompatActivity {
 
     private Button editProfileButton;
     private Button favoritesButton;
+    private Button logoutButton;
     private TextView textViewFullName;
     private TextView textViewUsername;
     private TextView textViewEmail;
@@ -58,6 +59,13 @@ public class AccountActivity extends AppCompatActivity {
                 Intent i = new Intent(AccountActivity.this, UserFavoritesActivity.class);
                 i.putExtra("username", currentUsername);
                 startActivity(i);
+            }
+        });
+
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }
