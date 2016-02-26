@@ -1,7 +1,9 @@
 package edu.wpi.mis270xteam1.whiskybarrl;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -9,23 +11,35 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class UserFavoritesActivity extends Activity {
+public class UserFavoritesActivity extends Fragment {
     private ListView userFavoritesListView;
     private DatabaseHandler db;
     private String username;
     private User user;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_favorites);
 
-        username = getIntent().getStringExtra("username");
+        username = getArguments().getString("username");
 
-        userFavoritesListView = (ListView) findViewById(R.id.userFavoritesListView);
-        db = new DatabaseHandler(this);
+        db = new DatabaseHandler(getActivity());
         user = db.getUser(username);
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_user_favorites, container, false);
+
+        userFavoritesListView = (ListView) view.findViewById(R.id.userFavoritesListView);
+        updateFavoritesList();
+
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         updateFavoritesList();
     }
 
@@ -35,10 +49,10 @@ public class UserFavoritesActivity extends Activity {
 
         if (favoriteWhiskeys.size() == 0) {
             // Indicate to the user if there are no comments.
-            RelativeLayout layout = (RelativeLayout) findViewById(R.id.userFavoritesViewLayout);
+            RelativeLayout layout = (RelativeLayout) getView().findViewById(R.id.userFavoritesViewLayout);
             layout.removeView(userFavoritesListView);
 
-            TextView noFavoritesText = new TextView(this);
+            TextView noFavoritesText = new TextView(getActivity());
 
             noFavoritesText.setText(R.string.no_favorites);
             RelativeLayout.LayoutParams layoutParamsTextView = new RelativeLayout.LayoutParams(
@@ -50,7 +64,7 @@ public class UserFavoritesActivity extends Activity {
         } else {
             Whiskey[] favoriteWhiskeysArray = favoriteWhiskeys.toArray(new Whiskey[favoriteWhiskeys.size()]);
 
-            WhiskeyListAdapter favoriteWhiskeyListAdapter = new WhiskeyListAdapter(this, favoriteWhiskeysArray);
+            WhiskeyListAdapter favoriteWhiskeyListAdapter = new WhiskeyListAdapter(getActivity(), favoriteWhiskeysArray);
             userFavoritesListView.setAdapter(favoriteWhiskeyListAdapter);
         }
     }

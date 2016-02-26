@@ -52,7 +52,15 @@ public class EditProfile extends AppCompatActivity {
                     updateUserInformation();
                     db.updateUser(currentUser);
                     Intent data = new Intent();
-                    data.putExtra("newUsername", editTextUsername.getText().toString());
+                    Bundle userBundle = new Bundle();
+                    userBundle.putString("newUsername", editTextUsername.getText().toString());
+                    userBundle.putString("newFirstName", editTextFirstName.getText().toString());
+                    userBundle.putString("newLastName", editTextLastName.getText().toString());
+                    userBundle.putString("newEmail", editTextEmail.getText().toString());
+                    userBundle.putString("newPhoneNumber", editTextPhoneNumber.getText().toString());
+                    userBundle.putString("newGender", editTextGender.getText().toString());
+                    userBundle.putString("newCountry", editTextCountry.getText().toString());
+                    data.putExtras(userBundle);
                     setResult(RESULT_OK, data);
                     finish();
                 } else {

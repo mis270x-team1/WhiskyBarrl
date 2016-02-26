@@ -15,5 +15,4 @@
         android:id="@+id/whiskeyListView"
         android:layout_centerVertical="true"
         android:layout_alignParentTop="true" />
-
 </RelativeLayout>
