@@ -20,16 +20,11 @@ public class NewWhiskeyActivity extends AppCompatActivity {
     private RatingBar ratingBar;
     private Button buttonSub;
 
-    private int currentUserId;
-    private String currentUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_whiskey);
-
-        currentUserId = getIntent().getIntExtra("userId", -1);
-        currentUsername = getIntent().getStringExtra("username");
 
         editTextName = (EditText) findViewById(R.id.editTextName);
         editTextLocation = (EditText) findViewById(R.id.editTextLocation);
@@ -54,8 +49,6 @@ public class NewWhiskeyActivity extends AppCompatActivity {
                 whiskey.setProofLevel(alcoholContent);
                 whiskey.setDescription(description);
                 whiskey.setRating(rating);
-                whiskey.setWhiskeyUserId(currentUserId);
-                whiskey.setWhiskeyUsername(currentUsername);
 
                 DatabaseHandler dbHandler = new DatabaseHandler(NewWhiskeyActivity.this);
                 boolean whiskeyAdded = dbHandler.addWhiskey(whiskey);

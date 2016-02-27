@@ -31,7 +31,6 @@ public class WhiskeyListAdapter extends ArrayAdapter<Whiskey> {
         Whiskey whiskey = whiskeys[position];
 
         whiskeyNameView.setText(whiskey.getName());
-        usernameView.setText(whiskey.getWhiskeyUsername());
         ratingBar.setRating(whiskey.getRating());
 
         return listItemView;
