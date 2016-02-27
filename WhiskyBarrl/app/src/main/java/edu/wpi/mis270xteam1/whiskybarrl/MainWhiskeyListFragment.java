@@ -7,15 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
-public class MainWhiskeyListActivity extends Fragment {
+public class MainWhiskeyListFragment extends Fragment {
 
     private ListView whiskeyListView;
     private DatabaseHandler db;
@@ -31,7 +29,7 @@ public class MainWhiskeyListActivity extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_main_whiskey_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_main_whiskey_list, container, false);
         whiskeyListView = (ListView) view.findViewById(R.id.whiskeyListView);
         loadWhiskeys(view);
 
