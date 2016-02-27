@@ -1,6 +1,5 @@
 package edu.wpi.mis270xteam1.whiskybarrl;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +11,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ViewWhiskey extends AppCompatActivity {
+public class ViewWhiskeyActivity extends AppCompatActivity {
     private TextView textViewName;
     private TextView textViewLocation;
     private TextView textViewAlcCont;
@@ -59,7 +58,7 @@ public class ViewWhiskey extends AppCompatActivity {
             public void onClick(View v) {
                 String commentText = commentEditText.getText().toString();
                 if (TextUtils.isEmpty(commentText)) {
-                    Toast.makeText(ViewWhiskey.this, "Comment cannot be empty.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ViewWhiskeyActivity.this, "Comment cannot be empty.", Toast.LENGTH_SHORT).show();
                 } else {
                     WhiskeyComment whiskeyComment = new WhiskeyComment();
                     whiskeyComment.setUserId(db.getUser(currentUsername).getId());
@@ -67,7 +66,7 @@ public class ViewWhiskey extends AppCompatActivity {
                     whiskeyComment.setCommentText(commentEditText.getText().toString());
                     db.addWhiskeyComment(whiskeyComment);
                     db.close();
-                    Toast.makeText(ViewWhiskey.this, "Comment added successfully.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ViewWhiskeyActivity.this, "Comment added successfully.", Toast.LENGTH_SHORT).show();
                     commentEditText.setText("");
                 }
             }
@@ -76,7 +75,7 @@ public class ViewWhiskey extends AppCompatActivity {
         viewCommentsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(ViewWhiskey.this, WhiskeyCommentListActivity.class);
+                Intent i = new Intent(ViewWhiskeyActivity.this, WhiskeyCommentListActivity.class);
                 i.putExtra("whiskeyId", whiskeyId);
                 startActivity(i);
             }
@@ -114,7 +113,7 @@ public class ViewWhiskey extends AppCompatActivity {
                 User user = db.getUser(currentUsername);
                 db.addFavorite(user, whiskey);
                 Toast.makeText(
-                        ViewWhiskey.this,
+                        ViewWhiskeyActivity.this,
                         "Added " + whiskey.getName() + " to Favorites",
                         Toast.LENGTH_SHORT
                 ).show();
@@ -131,7 +130,7 @@ public class ViewWhiskey extends AppCompatActivity {
             public void onClick(View v) {
                 db.deleteFavorite(currentUser, whiskey);
                 Toast.makeText(
-                        ViewWhiskey.this,
+                        ViewWhiskeyActivity.this,
                         "Removed " + whiskey.getName() + " from Favorites",
                         Toast.LENGTH_SHORT
                 ).show();

@@ -38,7 +38,7 @@ public class MainWhiskeyListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Whiskey selectedWhiskey = (Whiskey) parent.getItemAtPosition(position);
                 int whiskeyId = selectedWhiskey.getId();
-                Intent i = new Intent(getActivity(), ViewWhiskey.class);
+                Intent i = new Intent(getActivity(), ViewWhiskeyActivity.class);
                 i.putExtra("username", currentUsername);
                 i.putExtra("whiskeyId", whiskeyId);
                 startActivity(i);

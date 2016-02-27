@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".EditProfile">
+    tools:context=".EditProfileActivity">
 
     <TextView
         android:layout_width="wrap_content"
@@ -91,6 +91,18 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/textViewEditAge"
+                android:text="Edit Age" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editTextEditAge"
+                android:hint="Edit Age" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:id="@+id/textViewEE"
                 android:text="Edit Email" />
 
@@ -135,6 +147,32 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/editTextEC"
                 android:hint="Edit Country" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Change Password"
+                android:id="@+id/textViewEditPassword" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:id="@+id/editTextChangePassword"
+                android:hint="New Password" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Confirm New Password"
+                android:id="@+id/textViewConfirmNewPassword" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:id="@+id/editTextConfirmNewPassword"
+                android:hint="Confirm New Password" />
 
             <Button
                 android:layout_width="wrap_content"
