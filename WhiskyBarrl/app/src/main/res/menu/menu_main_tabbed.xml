@@ -9,12 +9,6 @@
         android:title="@string/new_whiskey"
         app:showAsAction="ifRoom|withText" />
 
-
-    <item android:id="@+id/menu_item_log_out"
-        android:icon="@android:drawable/ic_menu_close_clear_cancel"
-        android:title="@string/logout"
-        app:showAsAction="ifRoom|withText" />
-
     <item android:id="@+id/menu_item_search_whiskeys"
         android:icon="@android:drawable/ic_menu_search"
         android:title="@string/search_whiskeys"

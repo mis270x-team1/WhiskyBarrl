@@ -16,7 +16,6 @@ public class AccountFragment extends Fragment {
     private DatabaseHandler db;
 
     private Button editProfileButton;
-    private Button favoritesButton;
     private Button logoutButton;
     private TextView textViewFullName;
     private TextView textViewUsername;
@@ -63,6 +62,7 @@ public class AccountFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_account, container, false);
 
         editProfileButton = (Button) view.findViewById(R.id.buttonEP);
+        logoutButton = (Button) view.findViewById(R.id.logoutButton);
         textViewFullName = (TextView) view.findViewById(R.id.textViewFullName);
         textViewUsername = (TextView) view.findViewById(R.id.textViewUsername);
         textViewEmail = (TextView) view.findViewById(R.id.textViewEmail);
