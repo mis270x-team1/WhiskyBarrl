@@ -38,6 +38,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String WHISKEY_COLUMN_PROOF = "Proof";
     private static final String WHISKEY_COLUMN_AGE = "Age";
     private static final String WHISKEY_COLUMN_LOCATION = "Location";
+    private static final String WHISKEY_COLUMN_USER_ID = "WhiskeyUserID";
+    private static final String WHISKEY_COLUMN_USERNAME = "WhiskeyUsername";
 
     // Table name and columns for whiskey comments table
     private static final String WHISKEY_COMMENT_TABLE_NAME = "WhiskeyComments";
@@ -47,7 +49,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String WHISKEY_COMMENT_COLUMN_COMMENT_WHISKEY_ID = "WhiskeyID";
 
     // Table name and columns for favorites table
-    private static final String FAVORITES_TABLE_NAME = "UserWhiskeys";
+    private static final String FAVORITES_TABLE_NAME = "UserFavorites";
     private static final String FAVORITES_COLUMN_USER_ID = "UserID";
     private static final String FAVORITES_COLUMN_WHISKEY_ID = "WhiskeyID";
 
@@ -62,16 +64,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Create the database tables.
-        db.execSQL("CREATE TABLE " + WHISKEY_TABLE_NAME + "(" +
-                WHISKEY_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                WHISKEY_COLUMN_NAME + " TEXT, " +
-                WHISKEY_COLUMN_DESCRIPTION + " TEXT, " +
-                WHISKEY_COLUMN_RATING + " REAL, " +
-                WHISKEY_COLUMN_PROOF + " INTEGER, " +
-                WHISKEY_COLUMN_AGE + " INTEGER, " +
-                WHISKEY_COLUMN_LOCATION + " TEXT " +
-                ");");
-
         db.execSQL("CREATE TABLE " + USER_TABLE_NAME + "(" +
                 USER_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 USER_COLUMN_USERNAME + " TEXT UNIQUE, " +
@@ -83,6 +75,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 USER_COLUMN_AGE + " INTEGER, " +
                 USER_COLUMN_GENDER + " TEXT, " +
                 USER_COLUMN_COUNTRY + " TEXT " +
+                ");");
+
+        db.execSQL("CREATE TABLE " + WHISKEY_TABLE_NAME + "(" +
+                WHISKEY_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                WHISKEY_COLUMN_NAME + " TEXT, " +
+                WHISKEY_COLUMN_DESCRIPTION + " TEXT, " +
+                WHISKEY_COLUMN_RATING + " REAL, " +
+                WHISKEY_COLUMN_PROOF + " INTEGER, " +
+                WHISKEY_COLUMN_AGE + " INTEGER, " +
+                WHISKEY_COLUMN_LOCATION + " TEXT, " +
+                WHISKEY_COLUMN_USER_ID + " INTEGER, " +
+                WHISKEY_COLUMN_USERNAME + " TEXT, " +
+                "FOREIGN KEY(" +
+                WHISKEY_COLUMN_USER_ID +
+                ") REFERENCES " + USER_TABLE_NAME + "(" + USER_COLUMN_ID + ") " +
                 ");");
 
         db.execSQL("CREATE TABLE " + WHISKEY_COMMENT_TABLE_NAME + "(" +
@@ -165,6 +172,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(WHISKEY_COLUMN_PROOF, whiskey.getProofLevel());
         values.put(WHISKEY_COLUMN_AGE, whiskey.getAge());
         values.put(WHISKEY_COLUMN_LOCATION, whiskey.getLocation());
+        values.put(WHISKEY_COLUMN_USER_ID, whiskey.getWhiskeyUserId());
+        values.put(WHISKEY_COLUMN_USERNAME, whiskey.getWhiskeyUsername());
 
         SQLiteDatabase db = getWritableDatabase();
         db.insert(WHISKEY_TABLE_NAME, null, values);
@@ -240,6 +249,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         user.setCountry(c.getString(c.getColumnIndex(USER_COLUMN_COUNTRY)));
 
         c.close();
+        db.close();
 
         return user;
     }
@@ -273,6 +283,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         user.setCountry(c.getString(c.getColumnIndex(USER_COLUMN_COUNTRY)));
 
         c.close();
+        db.close();
 
         return user;
     }
@@ -302,8 +313,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         whiskey.setProofLevel(c.getInt(c.getColumnIndex(WHISKEY_COLUMN_PROOF)));
         whiskey.setLocation(c.getString(c.getColumnIndex(WHISKEY_COLUMN_LOCATION)));
         whiskey.setAge(c.getInt(c.getColumnIndex(WHISKEY_COLUMN_AGE)));
+        whiskey.setWhiskeyUserId(c.getInt(c.getColumnIndex(WHISKEY_COLUMN_USER_ID)));
+        whiskey.setWhiskeyUsername(c.getString(c.getColumnIndex(WHISKEY_COLUMN_USERNAME)));
 
         c.close();
+        db.close();
 
         return whiskey;
     }
@@ -329,10 +343,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 whiskey.setProofLevel(c.getInt(c.getColumnIndex(WHISKEY_COLUMN_PROOF)));
                 whiskey.setLocation(c.getString(c.getColumnIndex(WHISKEY_COLUMN_LOCATION)));
                 whiskey.setAge(c.getInt(c.getColumnIndex(WHISKEY_COLUMN_AGE)));
+                whiskey.setWhiskeyUserId(c.getInt(c.getColumnIndex(WHISKEY_COLUMN_USER_ID)));
+                whiskey.setWhiskeyUsername(c.getString(c.getColumnIndex(WHISKEY_COLUMN_USERNAME)));
                 results.add(whiskey);
             } while (c.moveToNext());
         }
         c.close();
+        db.close();
 
         return results;
     }
@@ -360,8 +377,31 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (c.moveToNext());
         }
         c.close();
+        db.close();
 
         return results;
+    }
+
+    /**
+     * Check if a user has included a given whiskey in their favorites.
+     *
+     * @param user the user to check for
+     * @param whiskey the whiskey to check for
+     * @return true if the whiskey is a favorite of the user, false otherwise
+     */
+    public boolean isFavorite(User user, Whiskey whiskey) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        Cursor c = db.rawQuery("SELECT * FROM " + FAVORITES_TABLE_NAME
+                + " WHERE " + FAVORITES_COLUMN_USER_ID + " = " + user.getId() +
+                " AND " + FAVORITES_COLUMN_WHISKEY_ID + " = " + whiskey.getId(), null);
+        boolean isFavorite = c.moveToFirst();
+
+        c.close();
+        db.close();
+
+        // moveToFirst returns false if the cursor is empty.
+        return isFavorite;
     }
 
     /**
@@ -406,6 +446,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (c.moveToNext());
         }
         c.close();
+        db.close();
 
         return results;
     }
