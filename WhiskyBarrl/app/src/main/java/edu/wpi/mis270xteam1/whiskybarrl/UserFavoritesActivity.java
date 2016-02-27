@@ -40,7 +40,7 @@ public class UserFavoritesActivity extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        updateFavoritesList();
+        populateFavoritesList(getView());
     }
 
     private void updateFavoritesList() {
