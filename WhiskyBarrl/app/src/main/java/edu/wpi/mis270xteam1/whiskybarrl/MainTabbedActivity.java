@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.nio.DoubleBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,8 @@ public class MainTabbedActivity extends AppCompatActivity {
     private ViewPager mainViewPager;
     private FragmentManager fragmentManager;
     private String currentUsername;
+    private DatabaseHandler db;
+    private User user;
 
     private Fragment accountFragment;
     private Fragment mainWhiskeyListFragment;
@@ -34,6 +37,8 @@ public class MainTabbedActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_tabbed);
 
         currentUsername = getIntent().getStringExtra("username");
+        db = new DatabaseHandler(this);
+        user = db.getUser(currentUsername);
 
         mainToolbar = (Toolbar) findViewById(R.id.mainToolbar);
         mainTabBar = (TabLayout) findViewById(R.id.mainTabBar);
@@ -70,6 +75,8 @@ public class MainTabbedActivity extends AppCompatActivity {
             case R.id.menu_item_new_whiskey:
                 // Start a new activity to add a whiskey
                 Intent i = new Intent(this, NewWhiskeyActivity.class);
+                i.putExtra("userId", user.getId());
+                i.putExtra("username", currentUsername);
                 startActivity(i);
                 break;
             case R.id.menu_item_search_whiskeys:

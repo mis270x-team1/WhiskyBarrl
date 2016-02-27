@@ -18,7 +18,6 @@ public class UserFavoritesActivity extends Fragment {
     private DatabaseHandler db;
     private String username;
     private User user;
-    private WhiskeyListAdapter favoriteWhiskeyListAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,7 +53,7 @@ public class UserFavoritesActivity extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        favoriteWhiskeyListAdapter.notifyDataSetChanged();
+        populateFavoritesList(getView());
     }
 
     private void populateFavoritesList(View view) {
@@ -77,7 +76,7 @@ public class UserFavoritesActivity extends Fragment {
         } else {
             Whiskey[] favoriteWhiskeysArray = favoriteWhiskeys.toArray(new Whiskey[favoriteWhiskeys.size()]);
 
-            favoriteWhiskeyListAdapter = new WhiskeyListAdapter(getActivity(), favoriteWhiskeysArray);
+            WhiskeyListAdapter favoriteWhiskeyListAdapter = new WhiskeyListAdapter(getActivity(), favoriteWhiskeysArray);
             userFavoritesListView.setAdapter(favoriteWhiskeyListAdapter);
         }
     }
