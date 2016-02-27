@@ -31,7 +31,7 @@ public class UserFavoritesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_favorites, container, false);
         userFavoritesListView = (ListView) view.findViewById(R.id.userFavoritesListView);
-        updateFavoritesList();
+        updateFavoritesList(view);
 
         return view;
     }
@@ -39,16 +39,16 @@ public class UserFavoritesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        populateFavoritesList(getView());
+        updateFavoritesList(getView());
     }
 
-    private void updateFavoritesList() {
+    private void updateFavoritesList(View view) {
         List<Whiskey> favoriteWhiskeys = db.getUserFavorites(user);
         db.close();
 
         if (favoriteWhiskeys.size() == 0) {
             // Indicate to the user if there are no comments.
-            RelativeLayout layout = (RelativeLayout) getView().findViewById(R.id.userFavoritesViewLayout);
+            RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.userFavoritesViewLayout);
             layout.removeView(userFavoritesListView);
 
             TextView noFavoritesText = new TextView(getActivity());
