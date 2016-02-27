@@ -11,10 +11,13 @@ public class Whiskey {
     private int proofLevel;
     private int age;
     private String location;
-    private int whiskeyUserId;
-    private String whiskeyUsername;
 
     public Whiskey() {}
+
+    @Override
+    public String toString() {
+        return name;
+    }
 
     public int getId() {
         return id;
@@ -70,21 +73,5 @@ public class Whiskey {
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public int getWhiskeyUserId() {
-        return whiskeyUserId;
-    }
-
-    public void setWhiskeyUserId(int whiskeyUserId) {
-        this.whiskeyUserId = whiskeyUserId;
-    }
-
-    public String getWhiskeyUsername() {
-        return whiskeyUsername;
-    }
-
-    public void setWhiskeyUsername(String whiskeyUsername) {
-        this.whiskeyUsername = whiskeyUsername;
     }
 }
