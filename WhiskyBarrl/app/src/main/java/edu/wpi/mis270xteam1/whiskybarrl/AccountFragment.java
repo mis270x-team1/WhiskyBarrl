@@ -81,15 +81,6 @@ public class AccountFragment extends Fragment {
             }
         });
 
-        favoritesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getActivity(), UserFavoritesActivity.class);
-                i.putExtra("username", currentUsername);
-                startActivity(i);
-            }
-        });
-
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

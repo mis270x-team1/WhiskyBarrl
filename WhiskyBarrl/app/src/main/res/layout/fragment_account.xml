@@ -93,12 +93,6 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Your Favorites"
-            android:id="@+id/favoritesButton" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:text="@string/logout"
             android:id="@+id/logoutButton" />
     </LinearLayout>
