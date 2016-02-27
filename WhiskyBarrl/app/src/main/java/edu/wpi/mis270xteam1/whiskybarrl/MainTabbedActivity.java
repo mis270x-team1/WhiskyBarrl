@@ -1,6 +1,5 @@
 package edu.wpi.mis270xteam1.whiskybarrl;
 
-import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.nio.DoubleBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,13 +90,13 @@ public class MainTabbedActivity extends AppCompatActivity {
         Bundle arguments = new Bundle();
         arguments.putString("username", currentUsername);
 
-        accountFragment = new AccountActivity();
+        accountFragment = new AccountFragment();
         accountFragment.setArguments(arguments);
-        mainWhiskeyListFragment = new MainWhiskeyListActivity();
+        mainWhiskeyListFragment = new MainWhiskeyListFragment();
         mainWhiskeyListFragment.setArguments(arguments);
-        userFavoritesFragment = new UserFavoritesActivity();
+        userFavoritesFragment = new UserFavoritesFragment();
         userFavoritesFragment.setArguments(arguments);
-        searchFragment = new SearchActivity();
+        searchFragment = new SearchFragment();
         searchFragment.setArguments(arguments);
 
         TabLayout.Tab accountTab = mainTabBar.newTab().setIcon(R.drawable.user_account);

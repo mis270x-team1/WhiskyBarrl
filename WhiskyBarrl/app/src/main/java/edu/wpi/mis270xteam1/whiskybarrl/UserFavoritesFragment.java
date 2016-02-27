@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class UserFavoritesActivity extends Fragment {
+public class UserFavoritesFragment extends Fragment {
     private ListView userFavoritesListView;
     private DatabaseHandler db;
     private String username;
@@ -31,7 +31,7 @@ public class UserFavoritesActivity extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_user_favorites, container, false);
+        View view = inflater.inflate(R.layout.fragment_user_favorites, container, false);
         userFavoritesListView = (ListView) view.findViewById(R.id.userFavoritesListView);
         populateFavoritesList(view);
 

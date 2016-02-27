@@ -1,7 +1,6 @@
 package edu.wpi.mis270xteam1.whiskybarrl;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class AccountActivity extends Fragment {
+public class AccountFragment extends Fragment {
     private String currentUsername;
     private User currentUser;
     private DatabaseHandler db;
@@ -32,8 +31,8 @@ public class AccountActivity extends Fragment {
      * @param user the user to get the data from
      * @return a new instance of this fragment
      */
-    public static AccountActivity newInstance(User user) {
-        AccountActivity newAccountFragment = new AccountActivity();
+    public static AccountFragment newInstance(User user) {
+        AccountFragment newAccountFragment = new AccountFragment();
         Bundle args = new Bundle();
 
         args.putString("username", user.getUsername());
@@ -59,7 +58,7 @@ public class AccountActivity extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_account, container, false);
+        View view = inflater.inflate(R.layout.fragment_account, container, false);
 
         editProfileButton = (Button) view.findViewById(R.id.buttonEP);
         textViewFullName = (TextView) view.findViewById(R.id.textViewFullName);
