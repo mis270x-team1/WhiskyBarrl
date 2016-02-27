@@ -23,23 +23,16 @@
             android:name=".NewWhiskeyActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".AccountActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity
             android:name=".EditProfile"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".SearchActivity" />
         <activity
             android:name=".ViewWhiskey"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".MainWhiskeyListActivity"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
-        <activity
             android:name=".WhiskeyCommentListActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".UserFavoritesActivity"
+            android:name=".MainTabbedActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 

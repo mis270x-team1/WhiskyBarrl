@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".AccountActivity">
+    tools:context=".AccountFragment">
 
 
 
@@ -91,12 +91,6 @@
             android:layout_height="wrap_content"
             android:text="Edit Profile"
             android:id="@+id/buttonEP" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Your Favorites"
-            android:id="@+id/favoritesButton" />
 
 
     </LinearLayout>
