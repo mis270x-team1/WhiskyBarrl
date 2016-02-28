@@ -24,6 +24,16 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String savedUsername = preferences.getString("username", "");
+        String savedPassword = preferences.getString("password", "");
+
+        // Attempt an automatic login if there are saved preferences.
+        if (!("".equals(savedUsername) && "".equals(savedPassword))) {
+            attemptLogin(savedUsername, savedPassword, true);
+        }
+
         setContentView(R.layout.activity_login);
 
         editTextUsername = (EditText) findViewById(R.id.editTextUserName);
@@ -31,7 +41,6 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = (Button) findViewById(R.id.buttonLogIn);
         registerButton = (Button) findViewById(R.id.buttonRegister);
         rememberMeCheckbox = (CheckBox) findViewById(R.id.rememberMeCheckbox);
-        preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         getLoginCredentials();
 
@@ -48,58 +57,60 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isSuccessfulLogin()) {
-                    if (rememberMeCheckbox.isChecked()) {
-                        // Save the login information if the user wants it.
-                        saveLoginCredentials();
-                    } else {
-                        // Clear the saved login information if the user does not want it remembered.
-                        preferences.edit().clear().apply();
-                    }
-                    Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(LoginActivity.this, MainTabbedActivity.class);
-                    i.putExtra("username", editTextUsername.getText().toString());
-                    startActivity(i);
-                } else {
-                    // Create an alert dialog and show it to the user.
-                    AlertDialog.Builder loginFailedDialog = new AlertDialog.Builder(LoginActivity.this);
-                    loginFailedDialog.setTitle("Login Failed");
-
-                    if (allLoginFieldsEntered()) {
-                        loginFailedDialog.setMessage("Username/password combination does not exist");
-                    } else {
-                        loginFailedDialog.setMessage("Please enter a username and password");
-                    }
-
-                    loginFailedDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }).create().show();
-                }
+                String loginUsername = editTextUsername.getText().toString();
+                String loginPassword = editTextPassword.getText().toString();
+                boolean rememberCredentials = rememberMeCheckbox.isChecked();
+                attemptLogin(loginUsername, loginPassword, rememberCredentials);
             }
         });
     }
 
-    private boolean allLoginFieldsEntered() {
-        String loginUsername = editTextUsername.getText().toString();
-        String loginPassword = editTextPassword.getText().toString();
+    private void attemptLogin(String username, String password, boolean rememberCredentials) {
+        if (isSuccessfulLogin(username, password)) {
+            if (rememberCredentials) {
+                // Save the login information if the user wants it.
+                saveLoginCredentials(username, password);
+            } else {
+                // Clear the saved login information if the user does not want it remembered.
+                preferences.edit().clear().apply();
+            }
 
-        return loginUsername.trim().length() > 0 && loginPassword.trim().length() > 0;
+            Intent i = new Intent(LoginActivity.this, MainTabbedActivity.class);
+            i.putExtra("username", username);
+            startActivity(i);
+            finish();
+        } else {
+            // Create an alert dialog and show it to the user.
+            AlertDialog.Builder loginFailedDialog = new AlertDialog.Builder(LoginActivity.this);
+            loginFailedDialog.setTitle("Login Failed");
+
+            if (allLoginFieldsEntered(username, password)) {
+                loginFailedDialog.setMessage("Username/password combination does not exist");
+            } else {
+                loginFailedDialog.setMessage("Please enter a username and password");
+            }
+
+            loginFailedDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).create().show();
+        }
     }
 
-    private boolean isSuccessfulLogin() {
-        // Get the username/password attempted and compare it to the one in the database.
-        String loginUsername = editTextUsername.getText().toString();
-        String loginPassword = editTextPassword.getText().toString();
+    private boolean allLoginFieldsEntered(String username, String password) {
+        return username.trim().length() > 0 && password.trim().length() > 0;
+    }
 
-        if (!allLoginFieldsEntered()) {
+    private boolean isSuccessfulLogin(String username, String password) {
+        // Get the username/password attempted and compare it to the one in the database.
+        if (!allLoginFieldsEntered(username, password)) {
             return false;
         }
 
         DatabaseHandler db = new DatabaseHandler(this);
-        User loginUser = db.getUser(loginUsername);
+        User loginUser = db.getUser(username);
 
         if (loginUser == null) {
             // No user with this username exists, so login failed.
@@ -109,24 +120,20 @@ public class LoginActivity extends AppCompatActivity {
         String realUsername = loginUser.getUsername();
         String realPassword = loginUser.getPassword();
 
-        return realUsername.equals(loginUsername) && realPassword.equals(loginPassword);
+        return realUsername.equals(username) && realPassword.equals(password);
     }
 
-    private void saveLoginCredentials() {
-        String enteredUsername = editTextUsername.getText().toString();
-        String enteredPassword = editTextPassword.getText().toString();
-        preferences.edit().putString("username", enteredUsername).apply();
-        preferences.edit().putString("password", enteredPassword).apply();
-        preferences.edit().putBoolean("rememberMe", rememberMeCheckbox.isChecked()).apply();
+    private void saveLoginCredentials(String username, String password) {
+        preferences.edit().putString("username", username).apply();
+        preferences.edit().putString("password", password).apply();
     }
 
     private void getLoginCredentials() {
         String savedUsername = preferences.getString("username", "");
         String savedPassword = preferences.getString("password", "");
-        boolean rememberMe = preferences.getBoolean("rememberMe", false);
 
         editTextUsername.setText(savedUsername);
         editTextPassword.setText(savedPassword);
-        rememberMeCheckbox.setChecked(rememberMe);
+        rememberMeCheckbox.setChecked(true);
     }
 }

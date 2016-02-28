@@ -2,13 +2,16 @@ package edu.wpi.mis270xteam1.whiskybarrl;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class AccountFragment extends Fragment {
     private String currentUsername;
@@ -20,9 +23,11 @@ public class AccountFragment extends Fragment {
     private TextView textViewFullName;
     private TextView textViewUsername;
     private TextView textViewEmail;
+    private TextView textViewAge;
     private TextView textViewPhoneNumber;
     private TextView textViewGender;
     private TextView textViewCountry;
+    private SharedPreferences preferences;
 
     private static final int UPDATE_USER_REQUEST = 1;
 
@@ -52,6 +57,8 @@ public class AccountFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        preferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+
         currentUsername = getArguments().getString("username");
         db = new DatabaseHandler(getActivity());
         currentUser = db.getUser(currentUsername);
@@ -65,6 +72,7 @@ public class AccountFragment extends Fragment {
         logoutButton = (Button) view.findViewById(R.id.logoutButton);
         textViewFullName = (TextView) view.findViewById(R.id.textViewFullName);
         textViewUsername = (TextView) view.findViewById(R.id.textViewUsername);
+        textViewAge = (TextView) view.findViewById(R.id.textViewAge);
         textViewEmail = (TextView) view.findViewById(R.id.textViewEmail);
         textViewPhoneNumber = (TextView) view.findViewById(R.id.textViewPN);
         textViewGender = (TextView) view.findViewById(R.id.textViewGender);
@@ -75,7 +83,7 @@ public class AccountFragment extends Fragment {
         editProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getActivity(), EditProfile.class);
+                Intent i = new Intent(getActivity(), EditProfileActivity.class);
                 i.putExtra("username", currentUsername);
                 startActivityForResult(i, UPDATE_USER_REQUEST);
             }
@@ -84,7 +92,12 @@ public class AccountFragment extends Fragment {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                // Return to the login screen.
+                preferences.edit().clear().apply();
+                Toast.makeText(getActivity(), "You have been logged out.", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getActivity(), LoginActivity.class);
+                startActivity(i);
+                getActivity().finish();
             }
         });
         return view;
@@ -95,8 +108,10 @@ public class AccountFragment extends Fragment {
         if (requestCode == UPDATE_USER_REQUEST && resultCode == Activity.RESULT_OK) {
             Bundle result = data.getExtras();
             String newUsername = result.getString("newUsername");
+            String newPassword = result.getString("newPassword");
             String newFirstName = result.getString("newFirstName");
             String newLastName = result.getString("newLastName");
+            int newAge = result.getInt("newAge");
             String newEmail = result.getString("newEmail");
             String newPhoneNumber = result.getString("newPhoneNumber");
             String newGender = result.getString("newGender");
@@ -106,17 +121,18 @@ public class AccountFragment extends Fragment {
             currentUser.setUsername(newUsername);
             currentUser.setFirstName(newFirstName);
             currentUser.setLastName(newLastName);
+            currentUser.setAge(newAge);
             currentUser.setEmail(newEmail);
             currentUser.setPhoneNumber(newPhoneNumber);
             currentUser.setGender(newGender);
             currentUser.setCountry(newCountry);
+
+            if (newPassword != null) {
+                currentUser.setPassword(newPassword);
+            }
+
             showUserInfo();
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     private void showUserInfo() {
@@ -126,6 +142,7 @@ public class AccountFragment extends Fragment {
         textViewEmail.setText(currentUser.getEmail());
         textViewPhoneNumber.setText(currentUser.getPhoneNumber());
         textViewGender.setText(currentUser.getGender());
+        textViewAge.setText(currentUser.getAge() + " years old");
         textViewCountry.setText(currentUser.getCountry());
     }
 }

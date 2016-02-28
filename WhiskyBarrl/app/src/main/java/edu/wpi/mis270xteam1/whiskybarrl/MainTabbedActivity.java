@@ -53,8 +53,6 @@ public class MainTabbedActivity extends AppCompatActivity {
         mainTabBar.setupWithViewPager(mainViewPager);
     }
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

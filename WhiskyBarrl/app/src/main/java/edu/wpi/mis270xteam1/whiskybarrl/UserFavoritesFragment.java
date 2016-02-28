@@ -1,10 +1,12 @@
 package edu.wpi.mis270xteam1.whiskybarrl;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -32,6 +34,18 @@ public class UserFavoritesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_user_favorites, container, false);
         userFavoritesListView = (ListView) view.findViewById(R.id.userFavoritesListView);
         updateFavoritesList(view);
+
+        userFavoritesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Whiskey selectedWhiskey = (Whiskey) parent.getItemAtPosition(position);
+                int whiskeyId = selectedWhiskey.getId();
+                Intent i = new Intent(getActivity(), ViewWhiskeyActivity.class);
+                i.putExtra("username", username);
+                i.putExtra("whiskeyId", whiskeyId);
+                startActivity(i);
+            }
+        });
 
         return view;
     }
