@@ -2,13 +2,16 @@ package edu.wpi.mis270xteam1.whiskybarrl;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class AccountFragment extends Fragment {
     private String currentUsername;
@@ -24,6 +27,7 @@ public class AccountFragment extends Fragment {
     private TextView textViewPhoneNumber;
     private TextView textViewGender;
     private TextView textViewCountry;
+    private SharedPreferences preferences;
 
     private static final int UPDATE_USER_REQUEST = 1;
 
@@ -52,6 +56,8 @@ public class AccountFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 
         currentUsername = getArguments().getString("username");
         db = new DatabaseHandler(getActivity());
@@ -86,7 +92,12 @@ public class AccountFragment extends Fragment {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                // Return to the login screen.
+                preferences.edit().clear().apply();
+                Toast.makeText(getActivity(), "You have been logged out.", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getActivity(), LoginActivity.class);
+                startActivity(i);
+                getActivity().finish();
             }
         });
         return view;
