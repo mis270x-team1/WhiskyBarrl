@@ -36,7 +36,7 @@ public class NewWhiskeyActivity extends AppCompatActivity {
 
     private int currentUserId;
     private String currentUsername;
-    private String currentImgPath;
+    private String currentImgPath = "";
 
     private static final int NEW_WHISKEY_IMG_REQUEST_CODE = 1;
     private static final int GET_WHISKEY_IMG_FROM_GALLERY_REQUEST_CODE = 2;
@@ -76,6 +76,7 @@ public class NewWhiskeyActivity extends AppCompatActivity {
 
                 Whiskey whiskey = new Whiskey();
                 whiskey.setName(name);
+                whiskey.setImgPath(currentImgPath);
                 whiskey.setLocation(location);
                 whiskey.setProofLevel(alcoholContent);
                 whiskey.setDescription(description);
@@ -100,7 +101,7 @@ public class NewWhiskeyActivity extends AppCompatActivity {
                 Bitmap imgBitmap = (Bitmap) data.getExtras().get("data");
                 newWhiskeyImageView.setImageBitmap(imgBitmap);
                 currentImgPath = getRealUriPath(getImgUri(getApplicationContext(), imgBitmap));
-            } else if ( requestCode == GET_WHISKEY_IMG_FROM_GALLERY_REQUEST_CODE) {
+            } else if (requestCode == GET_WHISKEY_IMG_FROM_GALLERY_REQUEST_CODE) {
                 Cursor c = null;
                 try {
                     Uri imgUri = data.getData();

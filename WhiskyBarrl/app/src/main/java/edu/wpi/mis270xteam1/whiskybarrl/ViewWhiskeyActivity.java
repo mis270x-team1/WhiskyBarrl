@@ -96,7 +96,11 @@ public class ViewWhiskeyActivity extends AppCompatActivity {
 
     private void populateInformationFields() {
         textViewName.setText(whiskey.getName());
-        viewWhiskeyImg.setImageURI(Uri.fromFile(new File(whiskey.getImgPath())));
+
+        if (!"".equals(whiskey.getImgPath())) {
+            viewWhiskeyImg.setImageURI(Uri.fromFile(new File(whiskey.getImgPath())));
+        }
+
         textViewLocation.setText(whiskey.getLocation());
         textViewAlcCont.setText(Integer.toString(whiskey.getProofLevel()));
         textViewDescription.setText(whiskey.getDescription());

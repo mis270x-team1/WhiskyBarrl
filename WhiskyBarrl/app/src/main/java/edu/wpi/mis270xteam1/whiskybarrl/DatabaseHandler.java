@@ -316,6 +316,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Whiskey whiskey = new Whiskey();
         whiskey.setId(id);
         whiskey.setName(c.getString(c.getColumnIndex(WHISKEY_COLUMN_NAME)));
+        whiskey.setImgPath(c.getString(c.getColumnIndex(WHISKEY_COLUMN_IMG_PATH)));
         whiskey.setDescription(c.getString(c.getColumnIndex(WHISKEY_COLUMN_DESCRIPTION)));
         whiskey.setRating(c.getFloat(c.getColumnIndex(WHISKEY_COLUMN_RATING)));
         whiskey.setProofLevel(c.getInt(c.getColumnIndex(WHISKEY_COLUMN_PROOF)));
