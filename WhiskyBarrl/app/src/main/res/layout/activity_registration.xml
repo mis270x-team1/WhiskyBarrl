@@ -36,23 +36,11 @@
             android:layout_gravity="center_horizontal"
             android:textSize="24dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Username"
-            android:id="@+id/textViewUsername" />
-
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editTextUsername"
             android:hint="Enter Username" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="First Name"
-            android:id="@+id/textViewFN" />
 
         <EditText
             android:layout_width="match_parent"
@@ -61,12 +49,6 @@
             android:hint="Enter First Name"
             android:ems="10"
             android:id="@+id/editTextFN" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Last Name"
-            android:id="@+id/textViewLN" />
 
         <EditText
             android:layout_width="match_parent"
@@ -90,12 +72,6 @@
             android:id="@+id/editTextAge"
             android:hint="Enter Age" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Email"
-            android:id="@+id/textViewEmail" />
-
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -103,12 +79,6 @@
             android:ems="10"
             android:id="@+id/editTextEmail"
             android:hint="Enter Email" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Phone Number"
-            android:id="@+id/textViewPN" />
 
         <EditText
             android:layout_width="match_parent"
@@ -118,12 +88,6 @@
             android:id="@+id/editTextPN"
             android:hint="Enter Phone Number" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Password"
-            android:id="@+id/textViewPassword" />
-
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -131,12 +95,6 @@
             android:ems="10"
             android:id="@+id/editTextPassword"
             android:hint="Enter Password" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Confirm Password"
-            android:id="@+id/textViewCpass" />
 
         <EditText
             android:layout_width="match_parent"
@@ -152,17 +110,12 @@
             android:text="Gender"
             android:id="@+id/textViewGender" />
 
-        <EditText
+        <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editTextGender"
-            android:hint="Enter Gender" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Country"
-            android:id="@+id/textViewCountry" />
+            android:id="@+id/spinnerGender"
+            android:layout_gravity="center_horizontal"
+            android:spinnerMode="dropdown" />
 
         <EditText
             android:layout_width="match_parent"

@@ -9,48 +9,54 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".AccountFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:id="@+id/textViewTitle"
-        android:layout_gravity="center_horizontal"
-        android:textSize="24dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:weightSum="1"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/textViewTitle">
+        android:layout_alignParentStart="true">
 
 
-        <ImageButton
-            android:layout_width="122dp"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/imageButtonProPic"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="0.17" />
+            android:layout_weight="0.17">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Name"
-            android:id="@+id/textViewFullName"
-            android:layout_gravity="center_horizontal" />
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/imageButtonProPic"
+                android:layout_weight="0.54" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Username"
-            android:id="@+id/textViewUsername"
-            android:layout_gravity="center_horizontal" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.54">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Name"
+                    android:id="@+id/textViewFullName"
+                    android:allowUndo="false"
+                    android:textSize="24dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Username"
+                    android:id="@+id/textViewUsername"
+                    android:layout_weight="0.40"
+                    android:textSize="14dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"

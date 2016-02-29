@@ -23,57 +23,24 @@
             android:layout_alignParentEnd="true"
             android:weightSum="1">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="WhiskyBarrl"
-                android:id="@+id/textView4"
-                android:layout_gravity="center_horizontal"
-                android:textSize="54dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true" />
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Name"
-                android:id="@+id/viewWhiskeyNameHeader"
-                android:layout_below="@+id/textView4"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
+                android:gravity="center"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Name"
                 android:id="@+id/viewWhiskeyNameText"
                 android:layout_alignBottom="@+id/viewWhiskeyImgHeader"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Image"
-                android:id="@+id/viewWhiskeyImgHeader"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/viewWhiskeyNameHeader" />
+                android:layout_alignParentStart="true"
+                android:textSize="36dp" />
 
             <ImageButton
                 android:layout_width="142dp"
                 android:layout_height="118dp"
                 android:id="@+id/viewWhiskeyImg"
                 android:layout_below="@+id/viewWhiskeyImgHeader"
-                android:layout_alignParentLeft="true" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Location"
-                android:id="@+id/viewWhiskeyLocationHeader"
-                android:layout_below="@+id/viewWhiskeyImg"
                 android:layout_alignParentLeft="true" />
 
             <TextView
