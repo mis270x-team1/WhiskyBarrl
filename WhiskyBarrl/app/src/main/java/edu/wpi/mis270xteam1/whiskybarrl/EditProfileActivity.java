@@ -1,14 +1,32 @@
 package edu.wpi.mis270xteam1.whiskybarrl;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.util.jar.Manifest;
 
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -24,8 +42,14 @@ public class EditProfileActivity extends AppCompatActivity {
     private EditText editTextCountry;
     private EditText editTextChangePassword;
     private EditText editTextConfirmNewPassword;
-
     private Button submitChangesButton;
+    private ImageView currentProfilePic;
+    private ImageButton changeProfilePicButton;
+    private String newImgPath;
+
+    private static final int NEW_PROFILE_IMAGE_REQUEST_CODE = 1;
+    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
+
     private DatabaseHandler db;
     private User currentUser;
 
@@ -46,12 +70,21 @@ public class EditProfileActivity extends AppCompatActivity {
         editTextCountry = (EditText) findViewById(R.id.editTextEC);
         editTextChangePassword = (EditText) findViewById(R.id.editTextChangePassword);
         editTextConfirmNewPassword = (EditText) findViewById(R.id.editTextConfirmNewPassword);
-
         submitChangesButton = (Button) findViewById(R.id.buttonSC);
+        currentProfilePic = (ImageView) findViewById(R.id.editProfilePicImgView);
+        changeProfilePicButton = (ImageButton) findViewById(R.id.changeProfilePicButton);
+
         db = new DatabaseHandler(this);
         currentUser = db.getUser(currentUsername);
 
-        populateInfoInTextFields();
+        populateInfoFields();
+
+        changeProfilePicButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startCaptureImgActivity();
+            }
+        });
 
         submitChangesButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,11 +92,15 @@ public class EditProfileActivity extends AppCompatActivity {
                 if (isEditValid()) {
                     updateUserInformation();
                     db.updateUser(currentUser);
+                    System.out.println("New username: " + currentUser.getUsername());
+                    System.out.println("New password: " + currentUser.getPassword());
                     Intent data = new Intent();
                     Bundle userBundle = new Bundle();
                     userBundle.putString("newUsername", editTextUsername.getText().toString());
+                    userBundle.putString("newPassword", editTextChangePassword.getText().toString());
                     userBundle.putString("newFirstName", editTextFirstName.getText().toString());
                     userBundle.putString("newLastName", editTextLastName.getText().toString());
+                    userBundle.putString("newImgPath", newImgPath);
                     userBundle.putInt("newAge", Integer.parseInt(editTextAge.getText().toString()));
                     userBundle.putString("newEmail", editTextEmail.getText().toString());
                     userBundle.putString("newPhoneNumber", editTextPhoneNumber.getText().toString());
@@ -85,6 +122,38 @@ public class EditProfileActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        try {
+            if (requestCode == NEW_PROFILE_IMAGE_REQUEST_CODE && resultCode == RESULT_OK) {
+                File extFilesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                File file = null;
+                if (extFilesDir != null) {
+                    file = new File(extFilesDir, currentUsername + currentUser.getId() + ".jpg");
+                }
+                if (file != null) {
+                    Uri imgUri = Uri.fromFile(file);
+                    currentProfilePic.setImageURI(imgUri);
+                    newImgPath = imgUri.toString();
+                } else {
+                    Toast.makeText(
+                            EditProfileActivity.this,
+                            "An error occurred while updating the image.",
+                            Toast.LENGTH_SHORT
+                    ).show();
+                }
+            }
+        } catch (Exception e) {
+            Toast.makeText(
+                    EditProfileActivity.this,
+                    "An error occurred trying to fetch the image.",
+                    Toast.LENGTH_SHORT
+            ).show();
+            e.printStackTrace();
+        }
+    }
+
     private boolean isEditValid() {
         return isNewAgeValid() && isNewUsernameValid() && newPasswordsMatch();
     }
@@ -94,11 +163,62 @@ public class EditProfileActivity extends AppCompatActivity {
         return enteredAge >= 21;
     }
 
-    private void populateInfoInTextFields() {
+    private void startCaptureImgActivity() {
+        /*if (ContextCompat.checkSelfPermission(EditProfileActivity.this,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(EditProfileActivity.this,
+                    new String[] { android.Manifest.permission.WRITE_EXTERNAL_STORAGE },
+                    MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+
+        }*/
+
+        AlertDialog.Builder obtainImgOptionsDialog = new AlertDialog.Builder(EditProfileActivity.this);
+        String[] options = new String[] {"From Camera", "From Gallery"};
+
+        obtainImgOptionsDialog.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:
+                        Intent capturePicIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        if (capturePicIntent.resolveActivity(getPackageManager()) != null) {
+                            File extFilesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                            if (extFilesDir != null) {
+                                Uri uri = Uri.fromFile(new File(extFilesDir, currentUsername + currentUser.getId() + ".jpg"));
+                                capturePicIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                                startActivityForResult(capturePicIntent, NEW_PROFILE_IMAGE_REQUEST_CODE);
+                            } else {
+                                Toast.makeText(
+                                        EditProfileActivity.this,
+                                        "An error occurred with the camera.",
+                                        Toast.LENGTH_SHORT
+                                ).show();
+                            }
+                        }
+                        break;
+                    case 1:
+                        Intent getImgFromGalleryIntent = new Intent(Intent.ACTION_PICK,
+                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(getImgFromGalleryIntent, NEW_PROFILE_IMAGE_REQUEST_CODE);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+        obtainImgOptionsDialog.create().show();
+    }
+
+    private void populateInfoFields() {
         // Populate the EditText widgets with the current user information.
         editTextUsername.setText(currentUsername);
         editTextFirstName.setText(currentUser.getFirstName());
         editTextLastName.setText(currentUser.getLastName());
+
+        if (!"".equals(currentUser.getImgPath())) {
+            currentProfilePic.setImageURI(Uri.parse(currentUser.getImgPath()));
+        }
+
         editTextAge.setText(Integer.toString(currentUser.getAge()));
         editTextEmail.setText(currentUser.getEmail());
         editTextPhoneNumber.setText(currentUser.getPhoneNumber());
@@ -136,6 +256,7 @@ public class EditProfileActivity extends AppCompatActivity {
         String enteredUsername = editTextUsername.getText().toString();
         String enteredFirstName = editTextFirstName.getText().toString();
         String enteredLastName = editTextLastName.getText().toString();
+        String newPassword = editTextChangePassword.getText().toString();
         String enteredEmail = editTextEmail.getText().toString();
         String enteredPhoneNumber = editTextPhoneNumber.getText().toString();
         String enteredGender = editTextGender.getText().toString();
@@ -143,8 +264,18 @@ public class EditProfileActivity extends AppCompatActivity {
 
         currentUsername = enteredUsername;
         currentUser.setUsername(enteredUsername);
+
+        if (!TextUtils.isEmpty(newPassword)) {
+            currentUser.setPassword(newPassword);
+        }
+
         currentUser.setFirstName(enteredFirstName);
         currentUser.setLastName(enteredLastName);
+
+        if (newImgPath != null) {
+            currentUser.setImgPath(newImgPath);
+        }
+
         currentUser.setEmail(enteredEmail);
         currentUser.setPhoneNumber(enteredPhoneNumber);
         currentUser.setGender(enteredGender);

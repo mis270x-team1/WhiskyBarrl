@@ -1,17 +1,25 @@
 package edu.wpi.mis270xteam1.whiskybarrl;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 
 public class AccountFragment extends Fragment {
     private String currentUsername;
@@ -27,6 +35,7 @@ public class AccountFragment extends Fragment {
     private TextView textViewPhoneNumber;
     private TextView textViewGender;
     private TextView textViewCountry;
+    private ImageView imageViewProPic;
     private SharedPreferences preferences;
 
     private static final int UPDATE_USER_REQUEST = 1;
@@ -77,6 +86,7 @@ public class AccountFragment extends Fragment {
         textViewPhoneNumber = (TextView) view.findViewById(R.id.textViewPN);
         textViewGender = (TextView) view.findViewById(R.id.textViewGender);
         textViewCountry = (TextView) view.findViewById(R.id.textViewCountry);
+        imageViewProPic = (ImageView) view.findViewById(R.id.imageViewProPic);
 
         showUserInfo();
 
@@ -109,6 +119,7 @@ public class AccountFragment extends Fragment {
             Bundle result = data.getExtras();
             String newUsername = result.getString("newUsername");
             String newPassword = result.getString("newPassword");
+            String newImgPath = result.getString("newImgPath");
             String newFirstName = result.getString("newFirstName");
             String newLastName = result.getString("newLastName");
             int newAge = result.getInt("newAge");
@@ -129,6 +140,12 @@ public class AccountFragment extends Fragment {
 
             if (newPassword != null) {
                 currentUser.setPassword(newPassword);
+                System.out.println(currentUser.getUsername());
+                System.out.println(currentUser.getPassword());
+            }
+
+            if (newImgPath != null) {
+                currentUser.setImgPath(newImgPath);
             }
 
             showUserInfo();
@@ -137,12 +154,17 @@ public class AccountFragment extends Fragment {
 
     private void showUserInfo() {
         String fullName = currentUser.getFirstName() + " " + currentUser.getLastName();
+        String ageText = currentUser.getAge() + " years old";
         textViewFullName.setText(fullName);
         textViewUsername.setText(currentUsername);
+
+        if (!"".equals(currentUser.getImgPath())) {
+            imageViewProPic.setImageURI(Uri.parse(currentUser.getImgPath()));
+        }
         textViewEmail.setText(currentUser.getEmail());
         textViewPhoneNumber.setText(currentUser.getPhoneNumber());
         textViewGender.setText(currentUser.getGender());
-        textViewAge.setText(currentUser.getAge() + " years old");
+        textViewAge.setText(ageText);
         textViewCountry.setText(currentUser.getCountry());
     }
 }

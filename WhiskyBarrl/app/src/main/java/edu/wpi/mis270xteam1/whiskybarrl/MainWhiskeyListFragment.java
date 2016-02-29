@@ -1,7 +1,9 @@
 package edu.wpi.mis270xteam1.whiskybarrl;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,28 +56,33 @@ public class MainWhiskeyListFragment extends Fragment {
         loadWhiskeys(getView());
     }
 
-    private void loadWhiskeys(View view) {
-        // Part of this taken from http://viralpatel.net/blogs/convert-arraylist-to-arrays-in-java/
-        List<Whiskey> whiskeys = db.getAllWhiskeys();
+    private void loadWhiskeys(final View view) {
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                // Part of this taken from http://viralpatel.net/blogs/convert-arraylist-to-arrays-in-java/
+                List<Whiskey> whiskeys = db.getAllWhiskeys();
 
-        if (whiskeys.size() == 0) {
-            RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.whiskeyViewLayout);
-            layout.removeView(whiskeyListView);
+                if (whiskeys.size() == 0) {
+                    RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.whiskeyViewLayout);
+                    layout.removeView(whiskeyListView);
 
-            TextView noWhiskeysText = new TextView(getActivity());
+                    TextView noWhiskeysText = new TextView(getActivity());
 
-            noWhiskeysText.setText(R.string.no_whiskeys);
-            RelativeLayout.LayoutParams layoutParamsTextView = new RelativeLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParamsTextView.addRule(RelativeLayout.CENTER_HORIZONTAL);
-            noWhiskeysText.setLayoutParams(layoutParamsTextView);
+                    noWhiskeysText.setText(R.string.no_whiskeys);
+                    RelativeLayout.LayoutParams layoutParamsTextView = new RelativeLayout.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    layoutParamsTextView.addRule(RelativeLayout.CENTER_HORIZONTAL);
+                    noWhiskeysText.setLayoutParams(layoutParamsTextView);
 
-            layout.addView(noWhiskeysText);
-        } else {
-            Whiskey[] whiskeyArray = whiskeys.toArray(new Whiskey[whiskeys.size()]);
+                    layout.addView(noWhiskeysText);
+                } else {
+                    Whiskey[] whiskeyArray = whiskeys.toArray(new Whiskey[whiskeys.size()]);
 
-            WhiskeyListAdapter whiskeyListAdapter = new WhiskeyListAdapter(getActivity(), whiskeyArray);
-            whiskeyListView.setAdapter(whiskeyListAdapter);
-        }
+                    WhiskeyListAdapter whiskeyListAdapter = new WhiskeyListAdapter(getActivity(), whiskeyArray);
+                    whiskeyListView.setAdapter(whiskeyListAdapter);
+                }
+            }
+        });
     }
 }

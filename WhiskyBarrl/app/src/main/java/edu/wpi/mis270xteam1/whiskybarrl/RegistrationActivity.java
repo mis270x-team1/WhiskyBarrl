@@ -84,6 +84,9 @@ public class RegistrationActivity extends AppCompatActivity {
         user.setEmail(emailEntry);
         user.setPhoneNumber(phoneNumberEntry);
 
+        // Set the img path to be blank initially.
+        user.setImgPath("");
+
         return user;
     }
 

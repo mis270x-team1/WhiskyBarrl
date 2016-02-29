@@ -55,10 +55,30 @@
                 android:text="Image"
                 android:id="@+id/textViewImage" />
 
-            <ImageButton
-                android:layout_width="142dp"
-                android:layout_height="118dp"
-                android:id="@+id/imageButton" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/whiskeyImgViewLayout">
+
+                <ImageView
+                    android:layout_width="125dp"
+                    android:layout_height="125dp"
+                    android:src="@drawable/default_profile_img"
+                    android:contentDescription="The whiskey image"
+                    android:id="@+id/setWhiskeyImgView" />
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="The button to set the whiskey image"
+                    android:src="@android:drawable/ic_menu_camera"
+                    android:id="@+id/setWhiskeyImgButton"
+                    android:layout_below="@id/setWhiskeyImgView"
+                    android:layout_alignStart="@id/setWhiskeyImgView"
+                    android:layout_alignLeft="@id/setWhiskeyImgView"
+                    android:layout_alignRight="@id/setWhiskeyImgView"
+                    android:layout_alignEnd="@id/setWhiskeyImgView" />
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="wrap_content"

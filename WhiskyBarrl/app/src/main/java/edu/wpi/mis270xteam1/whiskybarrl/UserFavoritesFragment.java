@@ -2,6 +2,7 @@ package edu.wpi.mis270xteam1.whiskybarrl;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,30 +57,35 @@ public class UserFavoritesFragment extends Fragment {
         updateFavoritesList(getView());
     }
 
-    private void updateFavoritesList(View view) {
-        List<Whiskey> favoriteWhiskeys = db.getUserFavorites(user);
-        db.close();
+    private void updateFavoritesList(final View view) {
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                List<Whiskey> favoriteWhiskeys = db.getUserFavorites(user);
+                db.close();
 
-        if (favoriteWhiskeys.size() == 0) {
-            // Indicate to the user if there are no comments.
-            RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.userFavoritesViewLayout);
-            layout.removeView(userFavoritesListView);
+                if (favoriteWhiskeys.size() == 0) {
+                    // Indicate to the user if there are no comments.
+                    RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.userFavoritesViewLayout);
+                    layout.removeView(userFavoritesListView);
 
-            TextView noFavoritesText = new TextView(getActivity());
+                    TextView noFavoritesText = new TextView(getActivity());
 
-            noFavoritesText.setText(R.string.no_favorites);
-            RelativeLayout.LayoutParams layoutParamsTextView = new RelativeLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParamsTextView.addRule(RelativeLayout.CENTER_HORIZONTAL);
-            noFavoritesText.setLayoutParams(layoutParamsTextView);
+                    noFavoritesText.setText(R.string.no_favorites);
+                    RelativeLayout.LayoutParams layoutParamsTextView = new RelativeLayout.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    layoutParamsTextView.addRule(RelativeLayout.CENTER_HORIZONTAL);
+                    noFavoritesText.setLayoutParams(layoutParamsTextView);
 
-            layout.addView(noFavoritesText);
-        } else {
-            Whiskey[] favoriteWhiskeysArray = favoriteWhiskeys.toArray(new Whiskey[favoriteWhiskeys.size()]);
+                    layout.addView(noFavoritesText);
+                } else {
+                    Whiskey[] favoriteWhiskeysArray = favoriteWhiskeys.toArray(new Whiskey[favoriteWhiskeys.size()]);
 
-            WhiskeyListAdapter favoriteWhiskeyListAdapter = new WhiskeyListAdapter(getActivity(), favoriteWhiskeysArray);
-            userFavoritesListView.setAdapter(favoriteWhiskeyListAdapter);
-        }
+                    WhiskeyListAdapter favoriteWhiskeyListAdapter = new WhiskeyListAdapter(getActivity(), favoriteWhiskeysArray);
+                    userFavoritesListView.setAdapter(favoriteWhiskeyListAdapter);
+                }
+            }
+        });
     }
 
 }

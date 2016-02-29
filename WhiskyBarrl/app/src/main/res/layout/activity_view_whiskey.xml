@@ -61,12 +61,12 @@
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/viewWhiskeyNameHeader" />
 
-            <ImageButton
-                android:layout_width="142dp"
-                android:layout_height="118dp"
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/default_profile_img"
                 android:id="@+id/viewWhiskeyImg"
-                android:layout_below="@+id/viewWhiskeyImgHeader"
-                android:layout_alignParentLeft="true" />
+                android:contentDescription="The whiskey image" />
 
             <TextView
                 android:layout_width="match_parent"

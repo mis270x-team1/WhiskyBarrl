@@ -7,6 +7,7 @@ public class Whiskey {
     private int id;
     private String name;
     private String description;
+    private String imgPath;
     private float rating;
     private int proofLevel;
     private int age;
@@ -38,6 +39,14 @@ public class Whiskey {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getImgPath() {
+        return imgPath;
+    }
+
+    public void setImgPath(String imgPath) {
+        this.imgPath = imgPath;
     }
 
     public float getRating() {

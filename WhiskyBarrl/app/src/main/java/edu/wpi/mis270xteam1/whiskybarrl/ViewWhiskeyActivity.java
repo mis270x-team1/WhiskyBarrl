@@ -1,15 +1,19 @@
 package edu.wpi.mis270xteam1.whiskybarrl;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.File;
 
 public class ViewWhiskeyActivity extends AppCompatActivity {
     private TextView textViewName;
@@ -21,6 +25,7 @@ public class ViewWhiskeyActivity extends AppCompatActivity {
     private Button submitCommentButton;
     private Button viewCommentsButton;
     private Button favoriteButton;
+    private ImageView viewWhiskeyImg;
 
     private int whiskeyId;
     private String currentUsername;
@@ -48,6 +53,7 @@ public class ViewWhiskeyActivity extends AppCompatActivity {
         submitCommentButton = (Button) findViewById(R.id.commentSubmitButton);
         viewCommentsButton = (Button) findViewById(R.id.viewCommentsListButton);
         favoriteButton = (Button) findViewById(R.id.addFavoriteButton);
+        viewWhiskeyImg = (ImageView) findViewById(R.id.viewWhiskeyImg);
 
         ratingBar.setFocusable(false);
 
@@ -90,6 +96,11 @@ public class ViewWhiskeyActivity extends AppCompatActivity {
 
     private void populateInformationFields() {
         textViewName.setText(whiskey.getName());
+
+        if (!"".equals(whiskey.getImgPath())) {
+            viewWhiskeyImg.setImageURI(Uri.parse(whiskey.getImgPath()));
+        }
+
         textViewLocation.setText(whiskey.getLocation());
         textViewAlcCont.setText(Integer.toString(whiskey.getProofLevel()));
         textViewDescription.setText(whiskey.getDescription());
