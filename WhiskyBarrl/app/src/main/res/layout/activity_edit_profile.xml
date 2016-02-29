@@ -41,12 +41,30 @@
                 android:text="Change Profile Picture"
                 android:id="@+id/textViewCPP" />
 
-            <ImageButton
-                android:layout_width="97dp"
+            <RelativeLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/imageButton2"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="0.14" />
+                android:id="@+id/changeProfilePicLayout">
+
+                <ImageView
+                    android:layout_width="125dp"
+                    android:layout_height="125dp"
+                    android:src="@drawable/default_profile_img"
+                    android:contentDescription="The current profile pic"
+                    android:id="@+id/editProfilePicImgView" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="Button to change profile pic"
+                    android:id="@+id/changeProfilePicButton"
+                    android:src="@android:drawable/ic_menu_camera"
+                    android:layout_below="@id/editProfilePicImgView"
+                    android:layout_alignStart="@id/editProfilePicImgView"
+                    android:layout_alignLeft="@id/editProfilePicImgView"
+                    android:layout_alignRight="@id/editProfilePicImgView"
+                    android:layout_alignEnd="@id/editProfilePicImgView"/>
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="wrap_content"

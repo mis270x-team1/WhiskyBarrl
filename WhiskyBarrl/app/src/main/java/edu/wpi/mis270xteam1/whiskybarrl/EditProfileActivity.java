@@ -1,14 +1,26 @@
 package edu.wpi.mis270xteam1.whiskybarrl;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import java.io.File;
 
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -24,8 +36,14 @@ public class EditProfileActivity extends AppCompatActivity {
     private EditText editTextCountry;
     private EditText editTextChangePassword;
     private EditText editTextConfirmNewPassword;
-
     private Button submitChangesButton;
+    private ImageView currentProfilePic;
+    private ImageButton changeProfilePicButton;
+    private String newImgPath;
+
+    private static final int NEW_PROFILE_IMAGE_REQUEST_CODE = 1;
+    private static final int GET_PROFILE_IMAGE_FROM_GALLERY_REQUEST_CODE = 2;
+
     private DatabaseHandler db;
     private User currentUser;
 
@@ -46,12 +64,21 @@ public class EditProfileActivity extends AppCompatActivity {
         editTextCountry = (EditText) findViewById(R.id.editTextEC);
         editTextChangePassword = (EditText) findViewById(R.id.editTextChangePassword);
         editTextConfirmNewPassword = (EditText) findViewById(R.id.editTextConfirmNewPassword);
-
         submitChangesButton = (Button) findViewById(R.id.buttonSC);
+        currentProfilePic = (ImageView) findViewById(R.id.editProfilePicImgView);
+        changeProfilePicButton = (ImageButton) findViewById(R.id.changeProfilePicButton);
+
         db = new DatabaseHandler(this);
         currentUser = db.getUser(currentUsername);
 
-        populateInfoInTextFields();
+        populateInfoFields();
+
+        changeProfilePicButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startCaptureImgActivity();
+            }
+        });
 
         submitChangesButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,6 +112,33 @@ public class EditProfileActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        try {
+            if (resultCode == RESULT_OK) {
+                if (requestCode == NEW_PROFILE_IMAGE_REQUEST_CODE) {
+                    currentProfilePic.setImageBitmap((Bitmap) data.getExtras().get("data"));
+                } else if (requestCode == GET_PROFILE_IMAGE_FROM_GALLERY_REQUEST_CODE) {
+                    Uri imgUri = data.getData();
+                    String [] pathColumn = { MediaStore.Images.Media.DATA };
+                    Cursor c = getContentResolver().query(imgUri, pathColumn, null, null, null);
+                    c.moveToFirst();
+                    String imgString = c.getString(c.getColumnIndex(pathColumn[0]));
+                    c.close();
+
+                    currentProfilePic.setImageBitmap(BitmapFactory.decodeFile(imgString));
+                }
+            }
+        } catch (Exception e) {
+            Toast.makeText(
+                    EditProfileActivity.this,
+                    "An error occurred trying to fetch the image.",
+                    Toast.LENGTH_SHORT
+            ).show();
+        }
+    }
+
     private boolean isEditValid() {
         return isNewAgeValid() && isNewUsernameValid() && newPasswordsMatch();
     }
@@ -94,11 +148,43 @@ public class EditProfileActivity extends AppCompatActivity {
         return enteredAge >= 21;
     }
 
-    private void populateInfoInTextFields() {
+    private void startCaptureImgActivity() {
+        AlertDialog.Builder obtainImgOptionsDialog = new AlertDialog.Builder(EditProfileActivity.this);
+        String[] options = new String[] {"From Camera", "From Gallery"};
+
+        obtainImgOptionsDialog.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:
+                        Intent capturePicIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        if (capturePicIntent.resolveActivity(getPackageManager()) != null) {
+                            startActivityForResult(capturePicIntent, NEW_PROFILE_IMAGE_REQUEST_CODE);
+                        }
+                        break;
+                    case 1:
+                        Intent getImgFromGalleryIntent = new Intent(Intent.ACTION_PICK,
+                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(getImgFromGalleryIntent, NEW_PROFILE_IMAGE_REQUEST_CODE);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+        obtainImgOptionsDialog.create().show();
+    }
+
+    private void populateInfoFields() {
         // Populate the EditText widgets with the current user information.
         editTextUsername.setText(currentUsername);
         editTextFirstName.setText(currentUser.getFirstName());
         editTextLastName.setText(currentUser.getLastName());
+
+        if (!"".equals(currentUser.getImgPath())) {
+            currentProfilePic.setImageURI(Uri.fromFile(new File(currentUser.getImgPath())));
+        }
+
         editTextAge.setText(Integer.toString(currentUser.getAge()));
         editTextEmail.setText(currentUser.getEmail());
         editTextPhoneNumber.setText(currentUser.getPhoneNumber());
@@ -145,6 +231,7 @@ public class EditProfileActivity extends AppCompatActivity {
         currentUser.setUsername(enteredUsername);
         currentUser.setFirstName(enteredFirstName);
         currentUser.setLastName(enteredLastName);
+        currentUser.setImgPath(newImgPath);
         currentUser.setEmail(enteredEmail);
         currentUser.setPhoneNumber(enteredPhoneNumber);
         currentUser.setGender(enteredGender);
