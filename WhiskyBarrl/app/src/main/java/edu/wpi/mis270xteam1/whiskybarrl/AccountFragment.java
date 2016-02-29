@@ -140,6 +140,8 @@ public class AccountFragment extends Fragment {
 
             if (newPassword != null) {
                 currentUser.setPassword(newPassword);
+                System.out.println(currentUser.getUsername());
+                System.out.println(currentUser.getPassword());
             }
 
             if (newImgPath != null) {
@@ -157,10 +159,7 @@ public class AccountFragment extends Fragment {
         textViewUsername.setText(currentUsername);
 
         if (!"".equals(currentUser.getImgPath())) {
-            File file = new File(currentUser.getImgPath());
-            if (file.exists()) {
-                imageViewProPic.setImageURI(Uri.fromFile(file));
-            }
+            imageViewProPic.setImageURI(Uri.parse(currentUser.getImgPath()));
         }
         textViewEmail.setText(currentUser.getEmail());
         textViewPhoneNumber.setText(currentUser.getPhoneNumber());

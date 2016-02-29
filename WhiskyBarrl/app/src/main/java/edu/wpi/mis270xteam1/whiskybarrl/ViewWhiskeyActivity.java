@@ -98,7 +98,7 @@ public class ViewWhiskeyActivity extends AppCompatActivity {
         textViewName.setText(whiskey.getName());
 
         if (!"".equals(whiskey.getImgPath())) {
-            viewWhiskeyImg.setImageURI(Uri.fromFile(new File(whiskey.getImgPath())));
+            viewWhiskeyImg.setImageURI(Uri.parse(whiskey.getImgPath()));
         }
 
         textViewLocation.setText(whiskey.getLocation());

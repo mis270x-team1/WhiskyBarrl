@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +23,9 @@ import android.widget.RatingBar;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class NewWhiskeyActivity extends AppCompatActivity {
     private EditText editTextName;
@@ -37,9 +41,9 @@ public class NewWhiskeyActivity extends AppCompatActivity {
     private int currentUserId;
     private String currentUsername;
     private String currentImgPath = "";
+    private String formattedDate;
 
     private static final int NEW_WHISKEY_IMG_REQUEST_CODE = 1;
-    private static final int GET_WHISKEY_IMG_FROM_GALLERY_REQUEST_CODE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,32 +100,22 @@ public class NewWhiskeyActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == NEW_WHISKEY_IMG_REQUEST_CODE) {
-                Bitmap imgBitmap = (Bitmap) data.getExtras().get("data");
-                newWhiskeyImageView.setImageBitmap(imgBitmap);
-                currentImgPath = getRealUriPath(getImgUri(getApplicationContext(), imgBitmap));
-            } else if (requestCode == GET_WHISKEY_IMG_FROM_GALLERY_REQUEST_CODE) {
-                Cursor c = null;
-                try {
-                    Uri imgUri = data.getData();
-                    String [] pathColumn = { MediaStore.Images.Media.DATA };
-                    c = getContentResolver().query(imgUri, pathColumn, null, null, null);
-                    if (c.moveToFirst()) {
-                        String imgString = c.getString(c.getColumnIndex(pathColumn[0]));
-                        newWhiskeyImageView.setImageBitmap(BitmapFactory.decodeFile(imgString));
-                        currentImgPath = getRealUriPath(imgUri);
-                    }
-                } catch (Exception e) {
-                    Toast.makeText(
-                            NewWhiskeyActivity.this,
-                            "An error occurred trying to fetch the image.",
-                            Toast.LENGTH_SHORT).show();
-                } finally {
-                    if (c != null) {
-                        c.close();
-                    }
-                }
+        if (requestCode == NEW_WHISKEY_IMG_REQUEST_CODE && resultCode == RESULT_OK) {
+            File extFilesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            File file = null;
+            if (extFilesDir != null) {
+                file = new File(extFilesDir, "IMG_WHISKEY" + formattedDate + ".jpg");
+            }
+            if (file != null) {
+                Uri imgUri = Uri.fromFile(file);
+                newWhiskeyImageView.setImageURI(imgUri);
+                currentImgPath = imgUri.toString();
+            } else {
+                Toast.makeText(
+                        NewWhiskeyActivity.this,
+                        "An error occurred while updating the image.",
+                        Toast.LENGTH_SHORT
+                ).show();
             }
         }
     }
@@ -148,20 +142,6 @@ public class NewWhiskeyActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private Uri getImgUri(Context context, Bitmap bitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Title", null);
-        return Uri.parse(path);
-    }
-
-    private String getRealUriPath(Uri uri) {
-        Cursor c = getContentResolver().query(uri, null, null, null, null);
-        c.moveToFirst();
-        int index = c.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-        return c.getString(index);
-    }
-
     private void startCaptureImgActivity() {
         AlertDialog.Builder obtainImgOptionsDialog = new AlertDialog.Builder(NewWhiskeyActivity.this);
         String[] options = new String[] {"From Camera", "From Gallery"};
@@ -173,7 +153,21 @@ public class NewWhiskeyActivity extends AppCompatActivity {
                     case 0:
                         Intent capturePicIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                         if (capturePicIntent.resolveActivity(getPackageManager()) != null) {
-                            startActivityForResult(capturePicIntent, NEW_WHISKEY_IMG_REQUEST_CODE);
+                            File extFilesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                            if (extFilesDir != null) {
+                                Calendar currentTime = Calendar.getInstance();
+                                SimpleDateFormat df = new SimpleDateFormat("yyyyMMddkkmmssSS");
+                                formattedDate = df.format(currentTime.getTime());
+                                Uri uri = Uri.fromFile(new File(extFilesDir, "IMG_WHISKEY" + formattedDate + ".jpg"));
+                                capturePicIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                                startActivityForResult(capturePicIntent, NEW_WHISKEY_IMG_REQUEST_CODE);
+                            } else {
+                                Toast.makeText(
+                                        NewWhiskeyActivity.this,
+                                        "An error occurred with the camera.",
+                                        Toast.LENGTH_SHORT
+                                ).show();
+                            }
                         }
                         break;
                     case 1:

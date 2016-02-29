@@ -4,12 +4,16 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -22,6 +26,7 @@ import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.jar.Manifest;
 
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -43,7 +48,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private String newImgPath;
 
     private static final int NEW_PROFILE_IMAGE_REQUEST_CODE = 1;
-    private static final int GET_PROFILE_IMAGE_FROM_GALLERY_REQUEST_CODE = 2;
+    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
 
     private DatabaseHandler db;
     private User currentUser;
@@ -87,6 +92,8 @@ public class EditProfileActivity extends AppCompatActivity {
                 if (isEditValid()) {
                     updateUserInformation();
                     db.updateUser(currentUser);
+                    System.out.println("New username: " + currentUser.getUsername());
+                    System.out.println("New password: " + currentUser.getPassword());
                     Intent data = new Intent();
                     Bundle userBundle = new Bundle();
                     userBundle.putString("newUsername", editTextUsername.getText().toString());
@@ -119,32 +126,22 @@ public class EditProfileActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         try {
-            if (resultCode == RESULT_OK) {
-                if (requestCode == NEW_PROFILE_IMAGE_REQUEST_CODE) {
-                    Bitmap imgBitmap = (Bitmap) data.getExtras().get("data");
-                    currentProfilePic.setImageBitmap(imgBitmap);
-                    newImgPath = getRealUriPath(getImgUri(getApplicationContext(), imgBitmap));
-                } else if (requestCode == GET_PROFILE_IMAGE_FROM_GALLERY_REQUEST_CODE) {
-                    Cursor c = null;
-                    try {
-                        Uri imgUri = data.getData();
-                        String [] pathColumn = { MediaStore.Images.Media.DATA };
-                        c = getContentResolver().query(imgUri, pathColumn, null, null, null);
-                        if (c.moveToFirst()) {
-                            String imgString = c.getString(c.getColumnIndex(pathColumn[0]));
-                            currentProfilePic.setImageBitmap(BitmapFactory.decodeFile(imgString));
-                            newImgPath = getRealUriPath(imgUri);
-                        }
-                    } catch (Exception e) {
-                        Toast.makeText(
-                                EditProfileActivity.this,
-                                "An error occurred trying to fetch the image.",
-                                Toast.LENGTH_SHORT).show();
-                    } finally {
-                        if (c != null) {
-                            c.close();
-                        }
-                    }
+            if (requestCode == NEW_PROFILE_IMAGE_REQUEST_CODE && resultCode == RESULT_OK) {
+                File extFilesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                File file = null;
+                if (extFilesDir != null) {
+                    file = new File(extFilesDir, currentUsername + currentUser.getId() + ".jpg");
+                }
+                if (file != null) {
+                    Uri imgUri = Uri.fromFile(file);
+                    currentProfilePic.setImageURI(imgUri);
+                    newImgPath = imgUri.toString();
+                } else {
+                    Toast.makeText(
+                            EditProfileActivity.this,
+                            "An error occurred while updating the image.",
+                            Toast.LENGTH_SHORT
+                    ).show();
                 }
             }
         } catch (Exception e) {
@@ -153,21 +150,8 @@ public class EditProfileActivity extends AppCompatActivity {
                     "An error occurred trying to fetch the image.",
                     Toast.LENGTH_SHORT
             ).show();
+            e.printStackTrace();
         }
-    }
-
-    private Uri getImgUri(Context context, Bitmap bitmap) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Title", null);
-        return Uri.parse(path);
-    }
-
-    private String getRealUriPath(Uri uri) {
-        Cursor c = getContentResolver().query(uri, null, null, null, null);
-        c.moveToFirst();
-        int index = c.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-        return c.getString(index);
     }
 
     private boolean isEditValid() {
@@ -180,6 +164,14 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void startCaptureImgActivity() {
+        /*if (ContextCompat.checkSelfPermission(EditProfileActivity.this,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(EditProfileActivity.this,
+                    new String[] { android.Manifest.permission.WRITE_EXTERNAL_STORAGE },
+                    MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+
+        }*/
+
         AlertDialog.Builder obtainImgOptionsDialog = new AlertDialog.Builder(EditProfileActivity.this);
         String[] options = new String[] {"From Camera", "From Gallery"};
 
@@ -190,7 +182,18 @@ public class EditProfileActivity extends AppCompatActivity {
                     case 0:
                         Intent capturePicIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                         if (capturePicIntent.resolveActivity(getPackageManager()) != null) {
-                            startActivityForResult(capturePicIntent, NEW_PROFILE_IMAGE_REQUEST_CODE);
+                            File extFilesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                            if (extFilesDir != null) {
+                                Uri uri = Uri.fromFile(new File(extFilesDir, currentUsername + currentUser.getId() + ".jpg"));
+                                capturePicIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                                startActivityForResult(capturePicIntent, NEW_PROFILE_IMAGE_REQUEST_CODE);
+                            } else {
+                                Toast.makeText(
+                                        EditProfileActivity.this,
+                                        "An error occurred with the camera.",
+                                        Toast.LENGTH_SHORT
+                                ).show();
+                            }
                         }
                         break;
                     case 1:
@@ -213,7 +216,7 @@ public class EditProfileActivity extends AppCompatActivity {
         editTextLastName.setText(currentUser.getLastName());
 
         if (!"".equals(currentUser.getImgPath())) {
-            currentProfilePic.setImageURI(Uri.fromFile(new File(currentUser.getImgPath())));
+            currentProfilePic.setImageURI(Uri.parse(currentUser.getImgPath()));
         }
 
         editTextAge.setText(Integer.toString(currentUser.getAge()));
@@ -261,7 +264,11 @@ public class EditProfileActivity extends AppCompatActivity {
 
         currentUsername = enteredUsername;
         currentUser.setUsername(enteredUsername);
-        currentUser.setPassword(newPassword);
+
+        if (!TextUtils.isEmpty(newPassword)) {
+            currentUser.setPassword(newPassword);
+        }
+
         currentUser.setFirstName(enteredFirstName);
         currentUser.setLastName(enteredLastName);
 
