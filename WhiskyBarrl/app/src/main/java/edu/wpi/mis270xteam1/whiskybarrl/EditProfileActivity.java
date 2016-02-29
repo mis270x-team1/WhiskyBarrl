@@ -1,7 +1,7 @@
 package edu.wpi.mis270xteam1.whiskybarrl;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -20,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 public class EditProfileActivity extends AppCompatActivity {
@@ -89,8 +90,10 @@ public class EditProfileActivity extends AppCompatActivity {
                     Intent data = new Intent();
                     Bundle userBundle = new Bundle();
                     userBundle.putString("newUsername", editTextUsername.getText().toString());
+                    userBundle.putString("newPassword", editTextChangePassword.getText().toString());
                     userBundle.putString("newFirstName", editTextFirstName.getText().toString());
                     userBundle.putString("newLastName", editTextLastName.getText().toString());
+                    userBundle.putString("newImgPath", newImgPath);
                     userBundle.putInt("newAge", Integer.parseInt(editTextAge.getText().toString()));
                     userBundle.putString("newEmail", editTextEmail.getText().toString());
                     userBundle.putString("newPhoneNumber", editTextPhoneNumber.getText().toString());
@@ -118,16 +121,30 @@ public class EditProfileActivity extends AppCompatActivity {
         try {
             if (resultCode == RESULT_OK) {
                 if (requestCode == NEW_PROFILE_IMAGE_REQUEST_CODE) {
-                    currentProfilePic.setImageBitmap((Bitmap) data.getExtras().get("data"));
+                    Bitmap imgBitmap = (Bitmap) data.getExtras().get("data");
+                    currentProfilePic.setImageBitmap(imgBitmap);
+                    newImgPath = getRealUriPath(getImgUri(getApplicationContext(), imgBitmap));
                 } else if (requestCode == GET_PROFILE_IMAGE_FROM_GALLERY_REQUEST_CODE) {
-                    Uri imgUri = data.getData();
-                    String [] pathColumn = { MediaStore.Images.Media.DATA };
-                    Cursor c = getContentResolver().query(imgUri, pathColumn, null, null, null);
-                    c.moveToFirst();
-                    String imgString = c.getString(c.getColumnIndex(pathColumn[0]));
-                    c.close();
-
-                    currentProfilePic.setImageBitmap(BitmapFactory.decodeFile(imgString));
+                    Cursor c = null;
+                    try {
+                        Uri imgUri = data.getData();
+                        String [] pathColumn = { MediaStore.Images.Media.DATA };
+                        c = getContentResolver().query(imgUri, pathColumn, null, null, null);
+                        if (c.moveToFirst()) {
+                            String imgString = c.getString(c.getColumnIndex(pathColumn[0]));
+                            currentProfilePic.setImageBitmap(BitmapFactory.decodeFile(imgString));
+                            newImgPath = getRealUriPath(imgUri);
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(
+                                EditProfileActivity.this,
+                                "An error occurred trying to fetch the image.",
+                                Toast.LENGTH_SHORT).show();
+                    } finally {
+                        if (c != null) {
+                            c.close();
+                        }
+                    }
                 }
             }
         } catch (Exception e) {
@@ -137,6 +154,20 @@ public class EditProfileActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT
             ).show();
         }
+    }
+
+    private Uri getImgUri(Context context, Bitmap bitmap) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Title", null);
+        return Uri.parse(path);
+    }
+
+    private String getRealUriPath(Uri uri) {
+        Cursor c = getContentResolver().query(uri, null, null, null, null);
+        c.moveToFirst();
+        int index = c.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        return c.getString(index);
     }
 
     private boolean isEditValid() {
@@ -222,6 +253,7 @@ public class EditProfileActivity extends AppCompatActivity {
         String enteredUsername = editTextUsername.getText().toString();
         String enteredFirstName = editTextFirstName.getText().toString();
         String enteredLastName = editTextLastName.getText().toString();
+        String newPassword = editTextChangePassword.getText().toString();
         String enteredEmail = editTextEmail.getText().toString();
         String enteredPhoneNumber = editTextPhoneNumber.getText().toString();
         String enteredGender = editTextGender.getText().toString();
@@ -229,9 +261,14 @@ public class EditProfileActivity extends AppCompatActivity {
 
         currentUsername = enteredUsername;
         currentUser.setUsername(enteredUsername);
+        currentUser.setPassword(newPassword);
         currentUser.setFirstName(enteredFirstName);
         currentUser.setLastName(enteredLastName);
-        currentUser.setImgPath(newImgPath);
+
+        if (newImgPath != null) {
+            currentUser.setImgPath(newImgPath);
+        }
+
         currentUser.setEmail(enteredEmail);
         currentUser.setPhoneNumber(enteredPhoneNumber);
         currentUser.setGender(enteredGender);

@@ -1,11 +1,14 @@
 package edu.wpi.mis270xteam1.whiskybarrl;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 public class AccountFragment extends Fragment {
@@ -128,7 +132,6 @@ public class AccountFragment extends Fragment {
             currentUser.setUsername(newUsername);
             currentUser.setFirstName(newFirstName);
             currentUser.setLastName(newLastName);
-            currentUser.setImgPath(newImgPath);
             currentUser.setAge(newAge);
             currentUser.setEmail(newEmail);
             currentUser.setPhoneNumber(newPhoneNumber);
@@ -137,6 +140,10 @@ public class AccountFragment extends Fragment {
 
             if (newPassword != null) {
                 currentUser.setPassword(newPassword);
+            }
+
+            if (newImgPath != null) {
+                currentUser.setImgPath(newImgPath);
             }
 
             showUserInfo();
@@ -150,7 +157,10 @@ public class AccountFragment extends Fragment {
         textViewUsername.setText(currentUsername);
 
         if (!"".equals(currentUser.getImgPath())) {
-            imageViewProPic.setImageURI(Uri.fromFile(new File(currentUser.getImgPath())));
+            File file = new File(currentUser.getImgPath());
+            if (file.exists()) {
+                imageViewProPic.setImageURI(Uri.fromFile(file));
+            }
         }
         textViewEmail.setText(currentUser.getEmail());
         textViewPhoneNumber.setText(currentUser.getPhoneNumber());

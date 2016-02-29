@@ -1,6 +1,7 @@
 package edu.wpi.mis270xteam1.whiskybarrl;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -18,6 +19,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.Toast;
+
+import java.io.ByteArrayOutputStream;
 
 public class NewWhiskeyActivity extends AppCompatActivity {
     private EditText editTextName;
@@ -32,6 +36,7 @@ public class NewWhiskeyActivity extends AppCompatActivity {
 
     private int currentUserId;
     private String currentUsername;
+    private String currentImgPath;
 
     private static final int NEW_WHISKEY_IMG_REQUEST_CODE = 1;
     private static final int GET_WHISKEY_IMG_FROM_GALLERY_REQUEST_CODE = 2;
@@ -92,16 +97,30 @@ public class NewWhiskeyActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             if (requestCode == NEW_WHISKEY_IMG_REQUEST_CODE) {
-                newWhiskeyImageView.setImageBitmap((Bitmap) data.getExtras().get("data"));
+                Bitmap imgBitmap = (Bitmap) data.getExtras().get("data");
+                newWhiskeyImageView.setImageBitmap(imgBitmap);
+                currentImgPath = getRealUriPath(getImgUri(getApplicationContext(), imgBitmap));
             } else if ( requestCode == GET_WHISKEY_IMG_FROM_GALLERY_REQUEST_CODE) {
-                Uri imgUri = data.getData();
-                String [] pathColumn = { MediaStore.Images.Media.DATA };
-                Cursor c = getContentResolver().query(imgUri, pathColumn, null, null, null);
-                c.moveToFirst();
-                String imgString = c.getString(c.getColumnIndex(pathColumn[0]));
-                c.close();
-
-                newWhiskeyImageView.setImageBitmap(BitmapFactory.decodeFile(imgString));
+                Cursor c = null;
+                try {
+                    Uri imgUri = data.getData();
+                    String [] pathColumn = { MediaStore.Images.Media.DATA };
+                    c = getContentResolver().query(imgUri, pathColumn, null, null, null);
+                    if (c.moveToFirst()) {
+                        String imgString = c.getString(c.getColumnIndex(pathColumn[0]));
+                        newWhiskeyImageView.setImageBitmap(BitmapFactory.decodeFile(imgString));
+                        currentImgPath = getRealUriPath(imgUri);
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(
+                            NewWhiskeyActivity.this,
+                            "An error occurred trying to fetch the image.",
+                            Toast.LENGTH_SHORT).show();
+                } finally {
+                    if (c != null) {
+                        c.close();
+                    }
+                }
             }
         }
     }
@@ -126,6 +145,20 @@ public class NewWhiskeyActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private Uri getImgUri(Context context, Bitmap bitmap) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Title", null);
+        return Uri.parse(path);
+    }
+
+    private String getRealUriPath(Uri uri) {
+        Cursor c = getContentResolver().query(uri, null, null, null, null);
+        c.moveToFirst();
+        int index = c.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        return c.getString(index);
     }
 
     private void startCaptureImgActivity() {
