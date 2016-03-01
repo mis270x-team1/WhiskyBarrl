@@ -36,21 +36,12 @@
                 android:layout_alignParentStart="true"
                 android:textSize="36dp" />
 
-<<<<<<< HEAD
-            <ImageButton
-                android:layout_width="142dp"
-                android:layout_height="118dp"
-                android:id="@+id/viewWhiskeyImg"
-                android:layout_below="@+id/viewWhiskeyImgHeader"
-                android:layout_alignParentLeft="true" />
-=======
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/default_profile_img"
                 android:id="@+id/viewWhiskeyImg"
                 android:contentDescription="The whiskey image" />
->>>>>>> 00296506434f9858c3b6fdedabcd6b1afdd5d373
 
             <TextView
                 android:layout_width="match_parent"

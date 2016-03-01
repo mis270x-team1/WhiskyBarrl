@@ -40,12 +40,6 @@
                 android:text="Image"
                 android:id="@+id/textViewImage" />
 
-<<<<<<< HEAD
-            <ImageButton
-                android:layout_width="142dp"
-                android:layout_height="118dp"
-                android:id="@+id/imageButton" />
-=======
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -70,7 +64,6 @@
                     android:layout_alignRight="@id/setWhiskeyImgView"
                     android:layout_alignEnd="@id/setWhiskeyImgView" />
             </RelativeLayout>
->>>>>>> 00296506434f9858c3b6fdedabcd6b1afdd5d373
 
             <EditText
                 android:layout_width="match_parent"
