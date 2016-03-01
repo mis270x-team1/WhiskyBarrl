@@ -96,6 +96,7 @@ public class AccountFragment extends Fragment {
                 Intent i = new Intent(getActivity(), EditProfileActivity.class);
                 i.putExtra("username", currentUsername);
                 startActivityForResult(i, UPDATE_USER_REQUEST);
+                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
 
@@ -107,6 +108,7 @@ public class AccountFragment extends Fragment {
                 Toast.makeText(getActivity(), "You have been logged out.", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(getActivity(), LoginActivity.class);
                 startActivity(i);
+                getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 getActivity().finish();
             }
         });

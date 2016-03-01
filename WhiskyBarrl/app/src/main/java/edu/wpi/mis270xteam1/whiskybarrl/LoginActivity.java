@@ -51,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
                 editTextPassword.setText("");
                 Intent registerIntent = new Intent(LoginActivity.this, RegistrationActivity.class);
                 startActivity(registerIntent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
 

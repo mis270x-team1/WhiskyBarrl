@@ -74,6 +74,7 @@ public class MainTabbedActivity extends AppCompatActivity {
                 i.putExtra("userId", user.getId());
                 i.putExtra("username", currentUsername);
                 startActivity(i);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 break;
             default:
                 break;

@@ -1,9 +1,13 @@
 package edu.wpi.mis270xteam1.whiskybarrl;
 
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Patterns;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -73,12 +77,32 @@ public class RegistrationActivity extends AppCompatActivity {
                     dbHandler.addUser(user);
                     Toast.makeText(RegistrationActivity.this, "Account successfully registered.", Toast.LENGTH_SHORT).show();
                     finish();
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 } else {
                     String errorMessage = getRegistrationErrorMessage();
                     Toast.makeText(RegistrationActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Drawable arrow = ContextCompat.getDrawable(getApplicationContext(), R.drawable.back_arrow);
+        arrow.mutate();
+        getSupportActionBar().setHomeAsUpIndicator(arrow);
+        getSupportActionBar().setTitle("Register");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            finish();
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private User createNewUser() {

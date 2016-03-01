@@ -25,19 +25,19 @@
         </activity>
         <activity
             android:name=".RegistrationActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light" />
         <activity
             android:name=".NewWhiskeyActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light" />
         <activity
             android:name=".EditProfileActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light" />
         <activity
             android:name=".ViewWhiskeyActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light" />
         <activity
             android:name=".WhiskeyCommentListActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light" />
         <activity
             android:name=".MainTabbedActivity"
             android:windowSoftInputMode="stateHidden"
