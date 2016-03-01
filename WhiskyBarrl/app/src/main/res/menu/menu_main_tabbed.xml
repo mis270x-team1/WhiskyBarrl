@@ -8,9 +8,4 @@
         android:icon="@drawable/add_whiskey"
         android:title="@string/new_whiskey"
         app:showAsAction="ifRoom|withText" />
-
-    <item android:id="@+id/menu_item_search_whiskeys"
-        android:icon="@android:drawable/ic_menu_search"
-        android:title="@string/search_whiskeys"
-        app:showAsAction="ifRoom|withText" />
 </menu>

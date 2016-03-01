@@ -17,6 +17,11 @@ public class Whiskey {
 
     public Whiskey() {}
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     public int getId() {
         return id;
     }
