@@ -10,8 +10,17 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".UserFavoritesFragment">
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/favoriteSearchEditText"
+        android:hint="@string/favorite_search_hint"
+        android:drawableLeft="@android:drawable/ic_menu_search"
+        android:layout_alignParentTop="true" />
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/userFavoritesListView" />
+        android:id="@+id/userFavoritesListView"
+        android:layout_below="@id/favoriteSearchEditText" />
 </RelativeLayout>

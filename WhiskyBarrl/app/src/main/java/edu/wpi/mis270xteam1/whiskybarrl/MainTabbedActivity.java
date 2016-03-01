@@ -75,8 +75,6 @@ public class MainTabbedActivity extends AppCompatActivity {
                 i.putExtra("username", currentUsername);
                 startActivity(i);
                 break;
-            case R.id.menu_item_search_whiskeys:
-                break;
             default:
                 break;
         }
@@ -97,15 +95,13 @@ public class MainTabbedActivity extends AppCompatActivity {
         searchFragment = new SearchFragment();
         searchFragment.setArguments(arguments);
 
-        TabLayout.Tab accountTab = mainTabBar.newTab().setIcon(R.drawable.user_account);
-        TabLayout.Tab mainWhiskeyListTab = mainTabBar.newTab().setIcon(R.drawable.whiskey_list);
-        TabLayout.Tab favoritesTab = mainTabBar.newTab().setIcon(R.drawable.favorites);
-        //TabLayout.Tab userWhiskeysTab = mainTabBar.newTab().setIcon(R.drawable.user_whiskey);
+        TabLayout.Tab accountTab = mainTabBar.newTab();
+        TabLayout.Tab mainWhiskeyListTab = mainTabBar.newTab();
+        TabLayout.Tab favoritesTab = mainTabBar.newTab();
 
         mainTabBar.addTab(accountTab);
         mainTabBar.addTab(mainWhiskeyListTab);
         mainTabBar.addTab(favoritesTab);
-        //mainTabBar.addTab(userWhiskeysTab);
     }
 
     // Most of the below code adapted from the following URL:
