@@ -27,7 +27,6 @@ public class MainTabbedActivity extends AppCompatActivity {
     private Fragment accountFragment;
     private Fragment mainWhiskeyListFragment;
     private Fragment userFavoritesFragment;
-    private Fragment searchFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,8 +92,6 @@ public class MainTabbedActivity extends AppCompatActivity {
         mainWhiskeyListFragment.setArguments(arguments);
         userFavoritesFragment = new UserFavoritesFragment();
         userFavoritesFragment.setArguments(arguments);
-        searchFragment = new SearchFragment();
-        searchFragment.setArguments(arguments);
 
         TabLayout.Tab accountTab = mainTabBar.newTab();
         TabLayout.Tab mainWhiskeyListTab = mainTabBar.newTab();
