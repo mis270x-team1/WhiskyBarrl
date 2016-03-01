@@ -27,7 +27,6 @@ public class MainTabbedActivity extends AppCompatActivity {
     private Fragment accountFragment;
     private Fragment mainWhiskeyListFragment;
     private Fragment userFavoritesFragment;
-    private Fragment searchFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +73,7 @@ public class MainTabbedActivity extends AppCompatActivity {
                 i.putExtra("userId", user.getId());
                 i.putExtra("username", currentUsername);
                 startActivity(i);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 break;
             default:
                 break;
@@ -92,8 +92,6 @@ public class MainTabbedActivity extends AppCompatActivity {
         mainWhiskeyListFragment.setArguments(arguments);
         userFavoritesFragment = new UserFavoritesFragment();
         userFavoritesFragment.setArguments(arguments);
-        searchFragment = new SearchFragment();
-        searchFragment.setArguments(arguments);
 
         TabLayout.Tab accountTab = mainTabBar.newTab();
         TabLayout.Tab mainWhiskeyListTab = mainTabBar.newTab();

@@ -1,15 +1,16 @@
 package edu.wpi.mis270xteam1.whiskybarrl;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Patterns;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,7 +22,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.io.File;
-import java.util.Arrays;
 
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -92,7 +92,21 @@ public class EditProfileActivity extends AppCompatActivity {
         changeProfilePicButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startCaptureImgActivity();
+                Intent capturePicIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (capturePicIntent.resolveActivity(getPackageManager()) != null) {
+                    File extFilesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                    if (extFilesDir != null) {
+                        Uri uri = Uri.fromFile(new File(extFilesDir, currentUsername + currentUser.getId() + ".jpg"));
+                        capturePicIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                        startActivityForResult(capturePicIntent, NEW_PROFILE_IMAGE_REQUEST_CODE);
+                    } else {
+                        Toast.makeText(
+                                EditProfileActivity.this,
+                                "An error occurred with the camera.",
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    }
+                }
             }
         });
 
@@ -130,6 +144,25 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
         populateInfoFields();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Drawable arrow = ContextCompat.getDrawable(getApplicationContext(), R.drawable.back_arrow);
+        arrow.mutate();
+        getSupportActionBar().setHomeAsUpIndicator(arrow);
+        getSupportActionBar().setTitle("Edit Profile");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            finish();
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -172,52 +205,6 @@ public class EditProfileActivity extends AppCompatActivity {
     private boolean isNewAgeValid() {
         int enteredAge = Integer.parseInt(editTextAge.getText().toString());
         return enteredAge >= 21;
-    }
-
-    private void startCaptureImgActivity() {
-        /*if (ContextCompat.checkSelfPermission(EditProfileActivity.this,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(EditProfileActivity.this,
-                    new String[] { android.Manifest.permission.WRITE_EXTERNAL_STORAGE },
-                    MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-
-        }*/
-
-        AlertDialog.Builder obtainImgOptionsDialog = new AlertDialog.Builder(EditProfileActivity.this);
-        String[] options = new String[] {"From Camera", "From Gallery"};
-
-        obtainImgOptionsDialog.setItems(options, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case 0:
-                        Intent capturePicIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        if (capturePicIntent.resolveActivity(getPackageManager()) != null) {
-                            File extFilesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-                            if (extFilesDir != null) {
-                                Uri uri = Uri.fromFile(new File(extFilesDir, currentUsername + currentUser.getId() + ".jpg"));
-                                capturePicIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                                startActivityForResult(capturePicIntent, NEW_PROFILE_IMAGE_REQUEST_CODE);
-                            } else {
-                                Toast.makeText(
-                                        EditProfileActivity.this,
-                                        "An error occurred with the camera.",
-                                        Toast.LENGTH_SHORT
-                                ).show();
-                            }
-                        }
-                        break;
-                    case 1:
-                        Intent getImgFromGalleryIntent = new Intent(Intent.ACTION_PICK,
-                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        startActivityForResult(getImgFromGalleryIntent, NEW_PROFILE_IMAGE_REQUEST_CODE);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });
-        obtainImgOptionsDialog.create().show();
     }
 
     private void populateInfoFields() {
