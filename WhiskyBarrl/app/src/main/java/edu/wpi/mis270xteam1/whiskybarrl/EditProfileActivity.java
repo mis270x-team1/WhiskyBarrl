@@ -1,32 +1,27 @@
 package edu.wpi.mis270xteam1.whiskybarrl;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.util.jar.Manifest;
+import java.util.Arrays;
 
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -38,7 +33,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private EditText editTextAge;
     private EditText editTextEmail;
     private EditText editTextPhoneNumber;
-    private EditText editTextGender;
+    private Spinner spinnerGender;
     private EditText editTextCountry;
     private EditText editTextChangePassword;
     private EditText editTextConfirmNewPassword;
@@ -46,6 +41,8 @@ public class EditProfileActivity extends AppCompatActivity {
     private ImageView currentProfilePic;
     private ImageButton changeProfilePicButton;
     private String newImgPath;
+    private String currentGender;
+    private ArrayAdapter<CharSequence> genderAdapter;
 
     private static final int NEW_PROFILE_IMAGE_REQUEST_CODE = 1;
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
@@ -66,7 +63,7 @@ public class EditProfileActivity extends AppCompatActivity {
         editTextLastName = (EditText) findViewById(R.id.editTextELN);
         editTextEmail = (EditText) findViewById(R.id.editTextEE);
         editTextPhoneNumber = (EditText) findViewById(R.id.editTextEPN);
-        editTextGender = (EditText) findViewById(R.id.editTextEG);
+        spinnerGender = (Spinner) findViewById(R.id.spinnerGender);
         editTextCountry = (EditText) findViewById(R.id.editTextEC);
         editTextChangePassword = (EditText) findViewById(R.id.editTextChangePassword);
         editTextConfirmNewPassword = (EditText) findViewById(R.id.editTextConfirmNewPassword);
@@ -77,7 +74,20 @@ public class EditProfileActivity extends AppCompatActivity {
         db = new DatabaseHandler(this);
         currentUser = db.getUser(currentUsername);
 
-        populateInfoFields();
+        genderAdapter = ArrayAdapter.createFromResource(this, R.array.genders_array,
+                android.R.layout.simple_spinner_dropdown_item);
+        spinnerGender.setAdapter(genderAdapter);
+        spinnerGender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                currentGender = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
 
         changeProfilePicButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,8 +102,6 @@ public class EditProfileActivity extends AppCompatActivity {
                 if (isEditValid()) {
                     updateUserInformation();
                     db.updateUser(currentUser);
-                    System.out.println("New username: " + currentUser.getUsername());
-                    System.out.println("New password: " + currentUser.getPassword());
                     Intent data = new Intent();
                     Bundle userBundle = new Bundle();
                     userBundle.putString("newUsername", editTextUsername.getText().toString());
@@ -104,7 +112,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     userBundle.putInt("newAge", Integer.parseInt(editTextAge.getText().toString()));
                     userBundle.putString("newEmail", editTextEmail.getText().toString());
                     userBundle.putString("newPhoneNumber", editTextPhoneNumber.getText().toString());
-                    userBundle.putString("newGender", editTextGender.getText().toString());
+                    userBundle.putString("newGender", currentGender);
                     userBundle.putString("newCountry", editTextCountry.getText().toString());
 
                     if (!TextUtils.isEmpty(editTextChangePassword.getText().toString())) {
@@ -120,6 +128,8 @@ public class EditProfileActivity extends AppCompatActivity {
                 }
             }
         });
+
+        populateInfoFields();
     }
 
     @Override
@@ -155,7 +165,8 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private boolean isEditValid() {
-        return isNewAgeValid() && isNewUsernameValid() && newPasswordsMatch();
+        return isNewAgeValid() && isNewUsernameValid()
+                && newPasswordsMatch() && !currentGender.contains("Select One");
     }
 
     private boolean isNewAgeValid() {
@@ -222,7 +233,10 @@ public class EditProfileActivity extends AppCompatActivity {
         editTextAge.setText(Integer.toString(currentUser.getAge()));
         editTextEmail.setText(currentUser.getEmail());
         editTextPhoneNumber.setText(currentUser.getPhoneNumber());
-        editTextGender.setText(currentUser.getGender());
+
+        int selectionPosition = genderAdapter.getPosition(currentUser.getGender());
+        spinnerGender.setSelection(selectionPosition);
+
         editTextCountry.setText(currentUser.getCountry());
     }
 
@@ -259,7 +273,6 @@ public class EditProfileActivity extends AppCompatActivity {
         String newPassword = editTextChangePassword.getText().toString();
         String enteredEmail = editTextEmail.getText().toString();
         String enteredPhoneNumber = editTextPhoneNumber.getText().toString();
-        String enteredGender = editTextGender.getText().toString();
         String enteredCountry = editTextCountry.getText().toString();
 
         currentUsername = enteredUsername;
@@ -278,7 +291,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         currentUser.setEmail(enteredEmail);
         currentUser.setPhoneNumber(enteredPhoneNumber);
-        currentUser.setGender(enteredGender);
+        currentUser.setGender(currentGender);
         currentUser.setCountry(enteredCountry);
     }
 
@@ -293,6 +306,8 @@ public class EditProfileActivity extends AppCompatActivity {
             return "You must enter a valid email address.";
         } else if (!isNewPhoneNumberValid()) {
             return "You must enter a valid phone number.";
+        } else if (currentGender.contains("Select One")) {
+            return "You must enter a gender.";
         }
         return "";
     }

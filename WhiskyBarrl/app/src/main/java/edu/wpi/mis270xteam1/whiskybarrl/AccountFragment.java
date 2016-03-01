@@ -140,8 +140,6 @@ public class AccountFragment extends Fragment {
 
             if (newPassword != null) {
                 currentUser.setPassword(newPassword);
-                System.out.println(currentUser.getUsername());
-                System.out.println(currentUser.getPassword());
             }
 
             if (newImgPath != null) {

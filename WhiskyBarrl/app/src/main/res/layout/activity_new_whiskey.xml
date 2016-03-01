@@ -28,21 +28,6 @@
             android:layout_alignParentEnd="true"
             android:weightSum="1">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="WhiskyBarrl"
-                android:id="@+id/textViewTitle"
-                android:layout_alignBottom="@+id/scrollView"
-                android:textSize="24dp"
-                android:layout_gravity="center_horizontal" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Name"
-                android:id="@+id/textViewName" />
-
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -80,23 +65,11 @@
                     android:layout_alignEnd="@id/setWhiskeyImgView" />
             </RelativeLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Location"
-                android:id="@+id/textViewLocation" />
-
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/editTextLocation"
                 android:hint="Enter Location" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Alcohol Content"
-                android:id="@+id/textViewAlcCont" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -114,12 +87,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/ratingBar" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Description"
-                android:id="@+id/textViewDesc" />
 
             <EditText
                 android:layout_width="match_parent"

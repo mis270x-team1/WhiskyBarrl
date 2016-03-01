@@ -9,20 +9,9 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".EditProfileActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="WhiskyBarrl"
-        android:id="@+id/textView2"
-        android:layout_gravity="center_horizontal"
-        android:textSize="24dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textView2">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:orientation="vertical"
@@ -66,25 +55,13 @@
                     android:layout_alignEnd="@id/editProfilePicImgView"/>
             </RelativeLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Edit First Name"
-                android:id="@+id/textViewEFN" />
-
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
                 android:ems="10"
                 android:id="@+id/editTextEFN"
-                android:hint="Edit First Name" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Edit Last Name"
-                android:id="@+id/textViewELN" />
+                android:hint="New First Name" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -92,85 +69,49 @@
                 android:inputType="textPersonName"
                 android:ems="10"
                 android:id="@+id/editTextELN"
-                android:hint="Edit Last Name" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Edit Username"
-                android:id="@+id/textViewEU" />
+                android:hint="New Last Name" />
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/editTextEU"
-                android:hint="Edit Username" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textViewEditAge"
-                android:text="Edit Age" />
+                android:hint="New Username" />
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/editTextEditAge"
-                android:hint="Edit Age" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textViewEE"
-                android:text="Edit Email" />
+                android:hint="New Age" />
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/editTextEE"
-                android:hint="Edit Email" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Edit Phone Numer"
-                android:id="@+id/textViewEPN" />
+                android:hint="New Email" />
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/editTextEPN"
-                android:hint="Edit Phone Number" />
+                android:hint="New Phone Number" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Edit Gender"
-                android:id="@+id/textViewEG" />
+                android:text="Gender"
+                android:id="@+id/textViewGender" />
 
-            <EditText
+            <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/editTextEG"
-                android:hint="Edit Gender" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Edit Country"
-                android:id="@+id/textViewEC" />
+                android:id="@+id/spinnerGender"
+                android:spinnerMode="dropdown" />
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/editTextEC"
-                android:hint="Edit Country" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Change Password"
-                android:id="@+id/textViewEditPassword" />
+                android:hint="New Country" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -178,12 +119,6 @@
                 android:inputType="textPassword"
                 android:id="@+id/editTextChangePassword"
                 android:hint="New Password" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Confirm New Password"
-                android:id="@+id/textViewConfirmNewPassword" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -193,7 +128,7 @@
                 android:hint="Confirm New Password" />
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Submit Changes"
                 android:id="@+id/buttonSC"
