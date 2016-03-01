@@ -35,23 +35,11 @@
             android:layout_gravity="center_horizontal"
             android:textSize="35dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Username"
-            android:id="@+id/textViewUserName" />
-
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editTextUserName"
             android:hint="Enter Username" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Password"
-            android:id="@+id/textViewPassword" />
 
         <EditText
             android:layout_width="match_parent"
