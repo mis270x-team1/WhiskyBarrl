@@ -16,7 +16,10 @@
         android:weightSum="1"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
+<<<<<<< HEAD
 
+=======
+>>>>>>> 00296506434f9858c3b6fdedabcd6b1afdd5d373
 
         <LinearLayout
             android:orientation="horizontal"
@@ -24,11 +27,23 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.17">
 
+<<<<<<< HEAD
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/imageButtonProPic"
                 android:layout_weight="0.54" />
+=======
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="25dp"
+                android:maxHeight="25dp"
+                android:id="@+id/imageViewProPic"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/default_profile_img"
+                android:contentDescription="Account Profile Picture" />
+>>>>>>> 00296506434f9858c3b6fdedabcd6b1afdd5d373
 
             <LinearLayout
                 android:orientation="vertical"

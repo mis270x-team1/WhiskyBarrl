@@ -5,8 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -19,12 +22,13 @@ public class RegistrationActivity extends AppCompatActivity {
     private EditText editTextPhoneNumber;
     private EditText editTextPassword;
     private EditText editTextReEnterPassword;
-    private EditText editTextGender;
+    private Spinner spinnerGender;
     private EditText editTextCountry;
 
     private Button registerButton;
 
     private DatabaseHandler dbHandler;
+    private String currentGender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +43,27 @@ public class RegistrationActivity extends AppCompatActivity {
         editTextPhoneNumber = (EditText) findViewById(R.id.editTextPN);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
         editTextReEnterPassword = (EditText) findViewById(R.id.editTextCpass);
-        editTextGender = (EditText) findViewById(R.id.editTextGender);
+        spinnerGender = (Spinner) findViewById(R.id.spinnerGender);
         editTextCountry = (EditText) findViewById(R.id.editTextCountry);
 
         registerButton = (Button) findViewById(R.id.buttonRegister);
 
         dbHandler = new DatabaseHandler(this);
+
+        ArrayAdapter<CharSequence> genderAdapter = ArrayAdapter.createFromResource(this,
+                R.array.genders_array, android.R.layout.simple_spinner_dropdown_item);
+        spinnerGender.setAdapter(genderAdapter);
+        spinnerGender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                currentGender = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,7 +85,6 @@ public class RegistrationActivity extends AppCompatActivity {
         String usernameEntry = editTextUsername.getText().toString();
         String firstNameEntry = editTextFirstName.getText().toString();
         String lastNameEntry = editTextLastName.getText().toString();
-        String genderEntry = editTextGender.getText().toString();
         String countryEntry = editTextCountry.getText().toString();
         int ageEntry = Integer.parseInt(editTextAge.getText().toString());
         String passwordEntry = editTextPassword.getText().toString();
@@ -77,12 +95,15 @@ public class RegistrationActivity extends AppCompatActivity {
         user.setUsername(usernameEntry);
         user.setFirstName(firstNameEntry);
         user.setLastName(lastNameEntry);
-        user.setGender(genderEntry);
+        user.setGender(currentGender);
         user.setCountry(countryEntry);
         user.setAge(ageEntry);
         user.setPassword(passwordEntry);
         user.setEmail(emailEntry);
         user.setPhoneNumber(phoneNumberEntry);
+
+        // Set the img path to be blank initially.
+        user.setImgPath("");
 
         return user;
     }
@@ -90,14 +111,14 @@ public class RegistrationActivity extends AppCompatActivity {
     private boolean isRegistrationInfoValid() {
         return allFieldsNotEmpty() && isUserNameValid()
                 && isPasswordValid() && isAgeValid()
-                && isEmailValid() && isPhoneNumberValid();
+                && isEmailValid() && isPhoneNumberValid()
+                && !currentGender.contains("Select One");
     }
 
     private boolean allFieldsNotEmpty() {
         String usernameEntry = editTextUsername.getText().toString();
         String firstNameEntry = editTextFirstName.getText().toString();
         String lastNameEntry = editTextLastName.getText().toString();
-        String genderEntry = editTextGender.getText().toString();
         String countryEntry = editTextCountry.getText().toString();
         String ageEntry = editTextAge.getText().toString();
         String emailEntry = editTextEmail.getText().toString();
@@ -106,7 +127,7 @@ public class RegistrationActivity extends AppCompatActivity {
         return !TextUtils.isEmpty(usernameEntry)
                 && !TextUtils.isEmpty(firstNameEntry)
                 && !TextUtils.isEmpty(lastNameEntry)
-                && !TextUtils.isEmpty(genderEntry)
+                && !TextUtils.isEmpty(currentGender)
                 && !TextUtils.isEmpty(countryEntry)
                 && !TextUtils.isEmpty(ageEntry)
                 && !TextUtils.isEmpty(emailEntry)
@@ -155,6 +176,8 @@ public class RegistrationActivity extends AppCompatActivity {
             return "You must enter a valid email address.";
         } else if (!isPhoneNumberValid()) {
             return "You must enter a valid phone number.";
+        } else if (currentGender.contains("Select One")) {
+            return "You must enter a gender.";
         }
         return "";
     }

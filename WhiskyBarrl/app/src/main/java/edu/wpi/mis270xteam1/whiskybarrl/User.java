@@ -8,6 +8,7 @@ public class User {
     private String username;
     private String firstName;
     private String lastName;
+    private String imgPath;
     private String email;
     private String phoneNumber;
     private String password;
@@ -47,6 +48,14 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getImgPath() {
+        return imgPath;
+    }
+
+    public void setImgPath(String imgPath) {
+        this.imgPath = imgPath;
     }
 
     public String getEmail() {

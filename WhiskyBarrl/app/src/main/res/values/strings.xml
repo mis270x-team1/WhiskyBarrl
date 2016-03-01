@@ -11,4 +11,9 @@
     <string name="no_whiskeys">No whiskeys are listed.</string>
     <string name="no_favorites">You have not favorited any whiskeys.</string>
     <string name="logout">Log Out</string>
+    <string-array name="genders_array">
+        <item>Select One</item>
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
 </resources>

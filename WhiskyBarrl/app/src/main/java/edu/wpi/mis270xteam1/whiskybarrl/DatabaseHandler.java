@@ -19,6 +19,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Table name and columns for users table
     private static final String USER_TABLE_NAME = "Users";
     private static final String USER_COLUMN_ID = "_id";
+    private static final String USER_COLUMN_IMG_PATH = "ImgPath";
     private static final String USER_COLUMN_USERNAME = "Username";
     private static final String USER_COLUMN_PASSWORD = "Password";
     private static final String USER_COLUMN_FIRST_NAME = "Firstname";
@@ -33,6 +34,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String WHISKEY_TABLE_NAME = "Whiskeys";
     private static final String WHISKEY_COLUMN_ID = "_id";
     private static final String WHISKEY_COLUMN_NAME = "Name";
+    private static final String WHISKEY_COLUMN_IMG_PATH = "ImgPath";
     private static final String WHISKEY_COLUMN_DESCRIPTION = "Description";
     private static final String WHISKEY_COLUMN_RATING = "Rating";
     private static final String WHISKEY_COLUMN_PROOF = "Proof";
@@ -68,6 +70,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 USER_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 USER_COLUMN_USERNAME + " TEXT UNIQUE, " +
                 USER_COLUMN_PASSWORD + " TEXT, " +
+                USER_COLUMN_IMG_PATH + " TEXT, " +
                 USER_COLUMN_FIRST_NAME + " TEXT, " +
                 USER_COLUMN_LAST_NAME + " TEXT, " +
                 USER_COLUMN_EMAIL + " TEXT, " +
@@ -80,6 +83,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE " + WHISKEY_TABLE_NAME + "(" +
                 WHISKEY_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 WHISKEY_COLUMN_NAME + " TEXT, " +
+                WHISKEY_COLUMN_IMG_PATH + " TEXT, " +
                 WHISKEY_COLUMN_DESCRIPTION + " TEXT, " +
                 WHISKEY_COLUMN_RATING + " REAL, " +
                 WHISKEY_COLUMN_PROOF + " INTEGER, " +
@@ -144,6 +148,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(USER_COLUMN_USERNAME, user.getUsername());
         values.put(USER_COLUMN_PASSWORD, user.getPassword());
+        values.put(USER_COLUMN_IMG_PATH, user.getImgPath());
         values.put(USER_COLUMN_FIRST_NAME, user.getFirstName());
         values.put(USER_COLUMN_LAST_NAME, user.getLastName());
         values.put(USER_COLUMN_EMAIL, user.getEmail());
@@ -168,6 +173,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(WHISKEY_COLUMN_NAME, whiskey.getName());
         values.put(WHISKEY_COLUMN_DESCRIPTION, whiskey.getDescription());
+        values.put(WHISKEY_COLUMN_IMG_PATH, whiskey.getImgPath());
         values.put(WHISKEY_COLUMN_RATING, whiskey.getRating());
         values.put(WHISKEY_COLUMN_PROOF, whiskey.getProofLevel());
         values.put(WHISKEY_COLUMN_AGE, whiskey.getAge());
@@ -242,6 +248,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         user.setPassword(c.getString(c.getColumnIndex(USER_COLUMN_PASSWORD)));
         user.setFirstName(c.getString(c.getColumnIndex(USER_COLUMN_FIRST_NAME)));
         user.setLastName(c.getString(c.getColumnIndex(USER_COLUMN_LAST_NAME)));
+        user.setImgPath(c.getString(c.getColumnIndex(USER_COLUMN_IMG_PATH)));
         user.setEmail(c.getString(c.getColumnIndex(USER_COLUMN_EMAIL)));
         user.setPhoneNumber(c.getString(c.getColumnIndex(USER_COLUMN_PHONE)));
         user.setAge(c.getInt(c.getColumnIndex(USER_COLUMN_AGE)));
@@ -276,6 +283,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         user.setPassword(c.getString(c.getColumnIndex(USER_COLUMN_PASSWORD)));
         user.setFirstName(c.getString(c.getColumnIndex(USER_COLUMN_FIRST_NAME)));
         user.setLastName(c.getString(c.getColumnIndex(USER_COLUMN_LAST_NAME)));
+        user.setImgPath(c.getString(c.getColumnIndex(USER_COLUMN_IMG_PATH)));
         user.setEmail(c.getString(c.getColumnIndex(USER_COLUMN_EMAIL)));
         user.setPhoneNumber(c.getString(c.getColumnIndex(USER_COLUMN_PHONE)));
         user.setAge(c.getInt(c.getColumnIndex(USER_COLUMN_AGE)));
@@ -308,6 +316,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Whiskey whiskey = new Whiskey();
         whiskey.setId(id);
         whiskey.setName(c.getString(c.getColumnIndex(WHISKEY_COLUMN_NAME)));
+        whiskey.setImgPath(c.getString(c.getColumnIndex(WHISKEY_COLUMN_IMG_PATH)));
         whiskey.setDescription(c.getString(c.getColumnIndex(WHISKEY_COLUMN_DESCRIPTION)));
         whiskey.setRating(c.getFloat(c.getColumnIndex(WHISKEY_COLUMN_RATING)));
         whiskey.setProofLevel(c.getInt(c.getColumnIndex(WHISKEY_COLUMN_PROOF)));
@@ -462,6 +471,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         values.put(USER_COLUMN_USERNAME, user.getUsername());
         values.put(USER_COLUMN_PASSWORD, user.getPassword());
+        values.put(USER_COLUMN_IMG_PATH, user.getImgPath());
         values.put(USER_COLUMN_FIRST_NAME, user.getFirstName());
         values.put(USER_COLUMN_LAST_NAME, user.getLastName());
         values.put(USER_COLUMN_EMAIL, user.getEmail());
